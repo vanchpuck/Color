@@ -4,37 +4,13 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
-
-    <Button
-        android:id="@+id/add_btn"
-        android:text="Add New Item"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:onClick="addColor" />
-    
-    <Button
-        android:id="@+id/del_btn"
-        android:text="Remove Item"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:onClick="delColor" />
-    
-    <Button
-        android:id="@+id/copy_btn"
-        android:text="Remove Item"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:onClick="copyColor" />
-    
+        
 	<com.example.colorcombination.ColorCombinationView
 	    android:id="@+id/combination_view"
 	    xmlns:android="http://schemas.android.com/apk/res/android"
-	    android:orientation="horizontal"
+	    android:orientation="vertical"
 	    android:layout_width="match_parent"
-	    android:layout_height="300dp" >  
-	    
-	    
-	    
+	    android:layout_height="360dp" > 	    
 	</com.example.colorcombination.ColorCombinationView>
 
 </LinearLayout>

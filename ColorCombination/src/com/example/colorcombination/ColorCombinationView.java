@@ -6,9 +6,14 @@ import android.graphics.Color;
 import android.support.v4.view.MotionEventCompat;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.DragEvent;
+import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 public class ColorCombinationView extends LinearLayout{
 
@@ -153,22 +158,25 @@ public class ColorCombinationView extends LinearLayout{
 		
 	}
 	
-	
+	/**
+	 * 
+	 * @author Vanchpuck
+	 *
+	 */
 	private class ColorsPane extends LinearLayout{
-
-		
-		
-//		@Override
-//		protected void onLayout(boolean changed, int l, int t, int r, int b) {
-//			// TODO Auto-generated method stub
-//			super.onLayout(changed, l, t, r, b);
-//			Log.w("onLayout", "### changed="+changed+" l="+l+" t="+t+" r="+r+" b="+b+" ###");
-//		}
 		
 		public ColorsPane(Context context, AttributeSet attrs) {
 			super(context,attrs);
 			this.setLayoutParams(new LinearLayout.LayoutParams(0, LayoutParams.FILL_PARENT, 1f));
 			this.setOrientation(VERTICAL);
+		}
+		
+		public void refreshResizers(){
+			ColorBlock block = null;
+			for(int i=0; i<this.getChildCount(); i++){
+				block = (ColorBlock) this.getChildAt(i);
+				block.onSizeChanged(block.getWidth(), block.getHeight(), block.getWidth(), block.getHeight());
+			}
 		}
 
 		public void addColor(ColorBlock color){
@@ -221,11 +229,131 @@ public class ColorCombinationView extends LinearLayout{
 		
 	}
 	
+	/**
+	 * 
+	 * @author Vanchpuck
+	 *
+	 */
+	private class BinPane extends LinearLayout{
+		
+		public BinPane(Context context, AttributeSet attrs) {
+			super(context,attrs);
+			this.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT, 50));
+			this.setOrientation(HORIZONTAL);
+			this.setGravity(Gravity.CENTER_HORIZONTAL);
+			
+			ImageView bin = new ImageView(getContext());
+			bin.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+			bin.setImageResource(R.drawable.ic_launcher);
+			
+			TextView text = new TextView(getContext());
+			text.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+			text.setText(getContext().getResources().getString (R.string.bin_text));
+			text.setTextSize(20);
+			text.setBackgroundColor(Color.LTGRAY);
+			
+			this.addView(bin);
+			this.addView(text);
+			
+			this.setOnDragListener(new OnDragListener() {
+				
+				public boolean onDrag(View v, DragEvent event) {
+
+					final int action = event.getAction();
+
+					int idx = 0;
+					
+					switch(action) {
+						case DragEvent.ACTION_DRAG_STARTED:
+							return true;
+						case DragEvent.ACTION_DRAG_ENTERED:
+//							binPane.setBackgroundColor(Color.CYAN);
+							return true;
+						case DragEvent.ACTION_DRAG_EXITED:
+//							binPane.setBackgroundColor(Color.LTGRAY);
+							return true;
+						case DragEvent.ACTION_DROP:
+							idx = ((LinearLayout)v.getParent()).indexOfChild(v)-1;
+							colorsPane.removeColor(idx);
+							return true;
+						case DragEvent.ACTION_DRAG_ENDED:
+							/* REMOVE COLOR FILTER*/
+							return true;
+					}
+					return true;
+				}
+			});
+		}
+		
+	}
+	
+	/**
+	 * 
+	 * @author Vanchpuck
+	 *
+	 */
 	private class ColorBlock extends View{
 		
 		public ColorBlock(Context context, int color) {
 			super(context);
 			this.setBackgroundColor(color);
+			this.setOnDragListener(new OnDragListener() {
+				
+				@Override
+				public boolean onDrag(View v, DragEvent event) {
+					final int action = event.getAction();
+					int idx = 0;
+					// Handles each of the expected events
+					switch(action) {
+					 	case DragEvent.ACTION_DRAG_STARTED :
+					 		return true;
+					 		
+					 	case DragEvent.ACTION_DRAG_ENTERED :
+					 		return true;
+					 		
+					 	case DragEvent.ACTION_DRAG_LOCATION :
+					 		Log.w("ColorDragDrop", "Y location: "+event.getY()+" border = "+(v.getHeight()/2));
+					 		idx = ((LinearLayout)v.getParent()).indexOfChild(v);
+							if(event.getY() > v.getHeight()/2){
+								resController.getPair(idx+1).rightResizer.setBackgroundColor(Color.BLACK);
+								resController.getPair(idx).rightResizer.setBackgroundColor(Color.YELLOW);
+							}
+							else{
+								resController.getPair(idx+1).rightResizer.setBackgroundColor(Color.YELLOW);
+								resController.getPair(idx).rightResizer.setBackgroundColor(Color.BLACK);
+							}
+							return true;
+						
+						case DragEvent.ACTION_DRAG_EXITED :
+							idx = ((LinearLayout)v.getParent()).indexOfChild(v);
+							resController.getPair(idx).rightResizer.setBackgroundColor(Color.YELLOW);
+							resController.getPair(idx+1).rightResizer.setBackgroundColor(Color.YELLOW);
+							return true;
+							
+						case DragEvent.ACTION_DROP:
+							idx = ((LinearLayout)v.getParent()).indexOfChild(v);
+							// Вроде как получаем вьюшку, которую перетаскиваем
+							View view = (View) event.getLocalState();
+							ColorsPane owner = (ColorsPane) view.getParent();
+							
+							resController.getPair(idx+1).rightResizer.setBackgroundColor(Color.YELLOW);
+							resController.getPair(idx).rightResizer.setBackgroundColor(Color.YELLOW);
+							owner.removeView(view);
+							owner.addView(view, idx);
+							
+							owner.refreshResizers();
+														
+							return true;
+							
+						case DragEvent.ACTION_DRAG_ENDED :
+							return true;
+							
+						default:
+							Log.w("ColorDragDrop", "Uknown drag action");
+						 		return false;
+					}
+				}
+			});
 			
 			this.setOnLongClickListener(new View.OnLongClickListener() {
 				
@@ -244,6 +372,10 @@ public class ColorCombinationView extends LinearLayout{
 					return true;
 				}
 			});
+		}
+		
+		public int getPosition(){
+			return ((LinearLayout)this.getParent()).indexOfChild(this);
 		}
 		
 		@Override
@@ -269,26 +401,41 @@ public class ColorCombinationView extends LinearLayout{
 //		public void setHeight(float height){
 //			this.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT, height));
 //		}
+	
 		
 	}
+	
+	
+	
 	
 //	private LinearLayout leftResizersPane;
 //	private LinearLayout rightResizersPane;
 	private ColorsPane colorsPane;
 	private ResizersController resController;
+	private BinPane binPane;
 		
 	public ColorCombinationView(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		
 //		setBackgroundColor(Color.RED);
 		
+		LinearLayout workspace = new LinearLayout(context);
+		workspace.setOrientation(LinearLayout.HORIZONTAL);
+		workspace.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT, 0, 1f));
+		
 		resController = new ResizersController();
 		colorsPane = new ColorsPane(context, attrs);
+		binPane = new BinPane(context, attrs);
+		
 //		colorsPane.setBackgroundColor(Color.GREEN);
 		
-		addView(resController.getLeftPane());
-		addView(colorsPane);
-		addView(resController.getRightPane());
+		workspace.addView(resController.getLeftPane());
+		workspace.addView(colorsPane);
+		workspace.addView(resController.getRightPane());
+		this.addView(workspace);
+		this.addView(binPane);
+		
+		
 		
 //		leftResizersPane = (ResizersPane) getChildAt(0);
 //		rightResizersPane = (ResizersPane) getChildAt(2);
@@ -307,6 +454,17 @@ public class ColorCombinationView extends LinearLayout{
 	public void removeColor(int idx){
 		colorsPane.removeColor(idx);
 		resController.removePair(idx+1);
+	}
+	
+	public void removeAllColors(){
+		resController.leftResizersPane.removeAllViews();
+		resController.rightResizersPane.removeAllViews();
+		colorsPane.removeAllViews();
+		
+		ResizersPair firstPair = resController.addPair();
+		firstPair.leftResizer.setMargin((Resizer.HEIGHT>>1)*-1);
+		firstPair.rightResizer.setMargin((Resizer.HEIGHT>>1)*-1);
+		firstPair.rightResizer.setBackgroundColor(Color.LTGRAY);
 	}
 	
 	public void setColor(){
