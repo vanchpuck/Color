@@ -15,7 +15,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-public class ColorCombinationView extends LinearLayout{
+public class ColorCombinationView extends LinearLayout implements ColorPicker.OnColorChangedListener{
 
 	private class ResizersController{
 		
@@ -129,25 +129,23 @@ public class ColorCombinationView extends LinearLayout{
 		    	case (MotionEvent.ACTION_DOWN) :
 		    		startY = (int)event.getY();
 		        case (MotionEvent.ACTION_MOVE) :
-//		        	int a = (int)MotionEventCompat.getX(event, index);
 		        	
-		        
 		        	int y = (int)(event.getY()-startY);
-//		        	Log.w("event.getY()", event.getY()+"");
-//		        	Log.w("startY", startY+"");
-		        	Log.w("y", y+"");
 		        
-		        	ColorBlock block = (ColorBlock)(colorsPane.getChildAt(idx-1));
-		        	if(block == null){
-		        		Log.w("BLOCK1", "NULL");
-		        	}
-		        	block.setHeight((block.getHeight()+y));
+		        	ColorBlock block1 = (ColorBlock)(colorsPane.getChildAt(idx-1));
+		        	ColorBlock block2 = (ColorBlock)(colorsPane.getChildAt(idx));
+		        	int minH = Resizer.HEIGHT*2;
 		        	
-		        	block = (ColorBlock)(colorsPane.getChildAt(idx));
-		        	if(block == null){
-		        		Log.w("BLOCK2", "NULL");
+		        	
+		        	if(event.getY() <= startY && block1.getHeight()+y <= minH){
+		        		break;
 		        	}
-		        	block.setHeight((block.getHeight()-y));
+		        	else if(event.getY() >= startY && block2.getHeight()-y <= minH){
+		        		break;
+		        	}
+		        	block1.setHeight((block1.getHeight()+y));
+		        	
+		        	block2.setHeight((block2.getHeight()-y));
 		        	
 		        	break;
 		        default :
@@ -273,7 +271,8 @@ public class ColorCombinationView extends LinearLayout{
 //							binPane.setBackgroundColor(Color.LTGRAY);
 							return true;
 						case DragEvent.ACTION_DROP:
-							idx = ((LinearLayout)v.getParent()).indexOfChild(v)-1;
+							idx = ((LinearLayout)v.getParent()).indexOfChild(v);
+							Log.w("DEL_IDX", idx+"");
 							colorsPane.removeColor(idx);
 							return true;
 						case DragEvent.ACTION_DRAG_ENDED:
@@ -471,6 +470,11 @@ public class ColorCombinationView extends LinearLayout{
 		ColorBlock bl = (ColorBlock)colorsPane.getChildAt(1);
 		colorsPane.removeViewAt(1);
 		colorsPane.addColor(bl);
+	}
+
+	@Override
+	public void colorChanged(int color) {
+		this.addColor(color);
 	}
 	
 

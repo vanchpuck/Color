@@ -12,7 +12,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.support.v4.app.NavUtils;
 
-public class MainActivity extends Activity implements ColorPickerDialog.OnColorChangedListener{
+public class MainActivity extends Activity {
 
 	ColorCombinationView colors;
 	int[] colorTab = new int[]{Color.BLACK, Color.RED, Color.CYAN, Color.MAGENTA, Color.GRAY};
@@ -91,9 +91,7 @@ public class MainActivity extends Activity implements ColorPickerDialog.OnColorC
 		// Handle presses on the action bar items
 		switch (item.getItemId()) {
 			case R.id.add_color:
-				ColorPickerDialog cp = new ColorPickerDialog(this, this, "key", Color.GREEN, Color.RED);
-				cp.show();
-				
+				new ColorPicker(MainActivity.this, colors, Color.WHITE).show();
 				return true;
 			case R.id.clear:
 				colors.removeAllColors();
@@ -112,13 +110,5 @@ public class MainActivity extends Activity implements ColorPickerDialog.OnColorC
 		}
     }
 
-
-	@Override
-	public void colorChanged(String key, int color) {
-		Log.w("COLOR", color+"");
-		Log.w("KEY", key+"");
-		colors.addColor(color);
-		pos++;
-	}
     
 }
