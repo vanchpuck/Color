@@ -9,5 +9,9 @@
     <string name="settings_bg_color_dialog">Выберите цвет</string>
     <string name="settings_bg_color_confirm">Готово</string>
     <string name="settings_default_color_confirm">Отмена</string>
+    
+    <string name="save_hint_name">Имя:</string>
+    <string name="menu_save">Сохранить</string>
+    <string name="cm_delete_btn">Удалить запись</string>
 
 </resources>
