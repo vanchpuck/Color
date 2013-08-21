@@ -5,7 +5,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
 
 public class SaveStore {
 	
@@ -35,22 +34,18 @@ public class SaveStore {
 		
 		/* ƒŒ¡¿¬»“‹ “–¿Õ«¿ ÷»ﬁ */
 	
-		
 		ContentValues values = new ContentValues();
 		values.put(StoreSQLiteHelper.tabTitle.COL_NAME, name);
-		values.put(StoreSQLiteHelper.tabTitle.COL_CREATE_DATE, "date('now')");
+		values.putNull(StoreSQLiteHelper.tabTitle.COL_CREATE_DATE);
 		long insertId = db.insert(StoreSQLiteHelper.tabTitle.NAME, null, values);
-		Log.w("INSERT", "ID: :"+insertId+"");
 		
 		for(int i=0; i<colors.getColorsCount(); i++){
 			values.clear();
 			values.put(StoreSQLiteHelper.tabContent.COL_TITLE_ID, insertId);
 			values.put(StoreSQLiteHelper.tabContent.COL_COLOR, colors.getColorBlock(i).getColor());
 			values.put(StoreSQLiteHelper.tabContent.COL_SIZE, colors.getColorBlock(i).getHeight()/colors.getHeight());
-			long id = db.insert(StoreSQLiteHelper.tabContent.NAME, null, values);
-			Log.w("INSERT", id+"");
+			db.insert(StoreSQLiteHelper.tabContent.NAME, null, values);
 		}
-		
 	}
 	
 	public void save(long id, String name, ColorCombinationView colors){
@@ -59,7 +54,7 @@ public class SaveStore {
 	
 		ContentValues values = new ContentValues();
 		values.put(StoreSQLiteHelper.tabTitle.COL_NAME, name);
-		values.put(StoreSQLiteHelper.tabTitle.COL_CREATE_DATE, "date('now')");
+		values.putNull(StoreSQLiteHelper.tabTitle.COL_CREATE_DATE);
 		db.update(StoreSQLiteHelper.tabTitle.NAME, values, StoreSQLiteHelper.tabTitle.COL_ID+"="+id, null);
 		
 		db.delete(StoreSQLiteHelper.tabContent.NAME, StoreSQLiteHelper.tabContent.COL_TITLE_ID+"="+id, null);
@@ -108,14 +103,14 @@ public class SaveStore {
 	
 	public Cursor getSaveList(){
 		Cursor cursor = db.query(
-			StoreSQLiteHelper.tabTitle.NAME, 
-			new String[]{StoreSQLiteHelper.tabTitle.COL_ID, StoreSQLiteHelper.tabTitle.COL_NAME, StoreSQLiteHelper.tabTitle.COL_CREATE_DATE},
-			null,
-			null,
-			null,
-			null,
-			StoreSQLiteHelper.tabTitle.COL_CREATE_DATE+" DESC",
-			null
+				StoreSQLiteHelper.tabTitle.NAME, 
+				new String[]{StoreSQLiteHelper.tabTitle.COL_NAME, StoreSQLiteHelper.tabTitle.COL_CREATE_DATE},
+				null,
+				null,
+				null,
+				null,
+				StoreSQLiteHelper.tabTitle.COL_CREATE_DATE+" DESC",
+				null
 		);
 		return cursor;
 	}

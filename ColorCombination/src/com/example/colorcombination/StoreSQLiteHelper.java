@@ -17,10 +17,10 @@ public class StoreSQLiteHelper extends SQLiteOpenHelper{
 		public final static String COL_CREATE_DATE = "create_date";
 		
 		private final static String STMT_CREATE = 
-			"create table "+NAME+" ( "+
+			"create table "+NAME+" ("+
 				COL_ID+" integer primary key autoincrement, "+
 				COL_NAME+" text not null, "+
-				COL_CREATE_DATE+" date not null "+
+				COL_CREATE_DATE+"date not null "+
 			");"
 		;		
 	}
@@ -33,11 +33,11 @@ public class StoreSQLiteHelper extends SQLiteOpenHelper{
 		public final static String COL_SIZE = "part";
 		
 		private final static String STMT_CREATE = 
-			"create table "+NAME+" ( "+
+			"create table "+NAME+" ("+
 				COL_ID+" integer primary key autoincrement, "+
 				COL_TITLE_ID+" integer not null, "+
 				COL_COLOR+" integer not null, "+
-				COL_SIZE+" integer not null "+
+				COL_SIZE+" integer not null, "+
 			");"
 		;
 	}

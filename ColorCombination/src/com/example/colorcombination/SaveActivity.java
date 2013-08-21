@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Menu;
@@ -17,11 +16,7 @@ import android.widget.SimpleCursorAdapter;
 
 public class SaveActivity extends Activity{
 	
-	protected final static int CM_DELETE_ID = 1;
-	
 	private SaveStore store;
-	private StoreSQLiteHelper dbHelper;
-	
 	private SimpleCursorAdapter adapter;
 	private ListView saveList;
 	private EditText saveName;
@@ -36,16 +31,13 @@ public class SaveActivity extends Activity{
 		store.openToWrite();
 		
 		cursor = store.getSaveList();
-		Log.w("SAVE ACTIVITY", "GET SAVE LIST");
 		startManagingCursor(cursor);
-		Log.w("SAVE ACTIVITY", "startManagingCursor");
 		
 		// формируем столбцы сопоставления
-		String[] from = new String[] { StoreSQLiteHelper.tabTitle.COL_NAME};
-		int[] to = new int[] { R.id.item_name};
+		String[] from = new String[] { DB.COLUMN_IMG, DB.COLUMN_TXT };
+		int[] to = new int[] { R.id.ivImg, R.id.tvText };
 		
-		adapter = new SimpleCursorAdapter(this, R.layout.list_item, cursor, from, to);
-		Log.w("SAVE ACTIVITY", "adapter");
+		adapter = new SimpleCursorAdapter(this, R.layout.item, cursor, from, to);
 		
 		saveList = (ListView) findViewById(R.id.save_list);
 		saveList.setAdapter(adapter);
@@ -76,7 +68,7 @@ public class SaveActivity extends Activity{
 	@Override
 	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
 		super.onCreateContextMenu(menu, v, menuInfo);
-		menu.add(0, CM_DELETE_ID, 0, R.string.cm_delete_btn);
+		menu.add(0, CM_DELETE_ID, 0, R.string.delete_record);
 	}
 	
 	@Override
@@ -85,7 +77,7 @@ public class SaveActivity extends Activity{
 			// получаем из пункта контекстного меню данные по пункту списка 
 			AdapterContextMenuInfo acmi = (AdapterContextMenuInfo) item.getMenuInfo();
 			// извлекаем id записи и удаляем соответствующую запись в БД
-			Log.w("SaveActivity.onContextItemSelected", acmi.id+"");
+			Log.w("SaveActivity.onContextItemSelected", acmi.id);
 			store.delSave(acmi.id);
 			// обновляем курсор
 			cursor.requery();
@@ -107,17 +99,14 @@ public class SaveActivity extends Activity{
 	}
 	
 	private void newSave(){
-		Log.w("NEW SAVE", "BEGIN");
 		if(!saveName.getText().equals("")){
 			Intent intent = new Intent();
-			intent.putExtra("name", saveName.getText().toString());
+			intent.putExtra("saveName", saveName.getText());
 			setResult(RESULT_OK, intent);
-			Log.w("NEW SAVE", RESULT_OK+"");
 			finish();
 		}
 		else{
 			/* ВЫВОДИМ СООБЩЕНИЕ */
-			Log.w("NEW SAVE", "ELSE");
 		}
 	}
 }
