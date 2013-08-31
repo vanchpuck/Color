@@ -65,7 +65,9 @@ public class MainActivity extends Activity {
 				saveColors();
 				return true;
 			case R.id.load:
-				/* ЗАПУСКАЕМ ДИАЛОГ ЗАГРУЗКИ */
+				loadColors();
+//				store.openToRead();
+//				store.load(2, colors);
 				return true;
 			default:
 				return super.onOptionsItemSelected(item);
@@ -77,47 +79,39 @@ public class MainActivity extends Activity {
 		Intent intent = new Intent(this, SaveActivity.class);
 		startActivityForResult(intent, REQUEST_CODE_SAVE);
 	}
+    
+    public void loadColors(){
+    	Log.w("LOAD", "LOAD BEGIN");
+		Intent intent = new Intent(this, LoadActivity.class);
+		startActivityForResult(intent, REQUEST_CODE_LOAD);
+	}
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		Log.w("SAVE ON RESULT", "BEGIN");
-		String name = data.getExtras().getString("name");
-		Log.w("SAVE ON RESULT", name);
-		if (data == null){
-			Log.w("SAVE ON RESULT", "DATA IS NULL");
-		}
+
 		if(resultCode == RESULT_OK){
+			// id выбранной в списке записи
+			long id = data.getLongExtra("id", -1);
 			Log.w("SAVE ON RESULT", "IF OK");
 			switch(requestCode){
 				case REQUEST_CODE_SAVE :
-					Log.w("SAVE ON RESULT", "REQUEST_CODE_SAVE");
-//					Log.w("SAVE_RESULT_ID", data.getLongExtra("id", -1)+"");
-//					Log.w("SAVE_RESULT_NAME", data.getStringExtra("name"));
 					store.openToWrite();
-					store.save(name, colors);
-					Log.w("SAVE ON RESULT", "DONE");
-//					if(data.getLongExtra("id", -1) != -1){
-//						store.save(data.getLongExtra("id", -1), colors);
-//					}
-//					else{
-//						store.save(data.getStringExtra("name"), colors);
-//					}
+					String name = data.getExtras().getString("name");
+					if(id == -1)
+						store.save(name, colors);
+					else
+						store.save(id, name, colors);
+					store.close();
 					break;
 				case REQUEST_CODE_LOAD : 
 					Log.w("LOAD_RESULT", data.getLongExtra("id", -1)+"");
-					long id = data.getLongExtra("id", -1);
-					// Продумать, куда затолкать SaveStore
-					SaveStore store = new SaveStore(this);
-					/* SaveStore */store.load(id, colors);
+					store.openToRead();
+					store.load(id, colors);
 					store.close();
 					break;
 			}
 		}
 	}
 
-//	public void loadColors(View v){
-//		Intent intent = new Intent(this, LoadActivity.class);
-//		startActivityForResult(intent, REQUEST_CODE_LOAD);
-//	}
     
 }

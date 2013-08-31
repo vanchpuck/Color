@@ -10,7 +10,7 @@
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:layout_gravity="center_vertical"
-		android:layout_marginLeft="5dp"
+		android:layout_marginLeft="8dp"
 		android:text="@string/save_hint_name"
 		android:textSize="8sp" />
 	

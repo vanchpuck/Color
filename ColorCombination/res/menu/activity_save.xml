@@ -1,6 +1,6 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:id="@+id/save_btn"
         android:title="@string/menu_save"
-        android:icon="@drawable/ic_launcher"
+        android:icon="@drawable/content_save"
         android:showAsAction="ifRoom" />
 </menu>

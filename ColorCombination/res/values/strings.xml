@@ -10,8 +10,11 @@
     <string name="settings_bg_color_confirm">Готово</string>
     <string name="settings_default_color_confirm">Отмена</string>
     
-    <string name="save_hint_name">Имя:</string>
+    <string name="save_hint_name">Новая запись:</string>
     <string name="menu_save">Сохранить</string>
     <string name="cm_delete_btn">Удалить запись</string>
+    <string name="resave_dialog">Перезаписать?</string>
+    <string name="resave_ok">Ок</string>
+    <string name="resave_cancel">Отмена</string>
 
 </resources>

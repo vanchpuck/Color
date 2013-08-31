@@ -1,6 +1,20 @@
 package com.example.colorcombination;
 
+import java.io.FileDescriptor;
+import java.io.PrintWriter;
+
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.app.DialogFragment;
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
+import android.app.Fragment.SavedState;
+import android.app.FragmentManager.BackStackEntry;
+import android.app.FragmentManager.OnBackStackChangedListener;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -11,6 +25,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView.AdapterContextMenuInfo;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
@@ -27,30 +43,74 @@ public class SaveActivity extends Activity{
 	private EditText saveName;
 	private Cursor cursor;
 	
+	AlertDialog.Builder builder;
+	
+	FragmentManager fManager;
+	
+	private class ResaveFragment extends DialogFragment {
+	    
+		private long saveId;
+		
+		protected ResaveFragment(long saveId){
+			this.saveId = saveId;
+		}
+		
+		@Override
+	    public Dialog onCreateDialog(Bundle savedInstanceState) {
+	        // Use the Builder class for convenient dialog construction
+	        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+	        builder.setMessage("!!!")
+	               .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+	                   public void onClick(DialogInterface dialog, int id) {
+	                       resave(saveId);
+	                   }
+	               })
+	               .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+	                   public void onClick(DialogInterface dialog, int id) {
+	                       // User cancelled the dialog
+	                   }
+	               });
+	        // Create the AlertDialog object and return it
+	        return builder.create();
+	    }
+	}
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.save_activity);
 		
+		fManager = this.getFragmentManager();
+		
+		
 		store = new SaveStore(this);
 		store.openToWrite();
 		
 		cursor = store.getSaveList();
-		Log.w("SAVE ACTIVITY", "GET SAVE LIST");
 		startManagingCursor(cursor);
-		Log.w("SAVE ACTIVITY", "startManagingCursor");
 		
 		// формируем столбцы сопоставления
-		String[] from = new String[] { StoreSQLiteHelper.tabTitle.COL_NAME};
+		String[] from = new String[] { StoreSQLiteHelper.TabTitle.COL_NAME};
 		int[] to = new int[] { R.id.item_name};
 		
 		adapter = new SimpleCursorAdapter(this, R.layout.list_item, cursor, from, to);
-		Log.w("SAVE ACTIVITY", "adapter");
 		
 		saveList = (ListView) findViewById(R.id.save_list);
 		saveList.setAdapter(adapter);
 		
 		registerForContextMenu(saveList);
+		
+		saveList.setOnItemClickListener(new OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//				Log.w("ID_2", id+"");
+//				AlertDialog dialog = builder.create();
+//				dialog.show();
+//				dialog.get
+				ResaveFragment d = new ResaveFragment(id);
+				d.show(fManager, null);
+			}
+		});
 		
 		saveName = (EditText)findViewById(R.id.save_name);
 	}
@@ -104,6 +164,14 @@ public class SaveActivity extends Activity{
 	protected void onDestroy() {
 		super.onDestroy();
 		store.close();
+	}
+	
+	private void resave(long id){
+		Intent intent = new Intent();
+		intent.putExtra("id", saveName.getText().toString());
+		setResult(RESULT_OK, intent);
+		Log.w("RESAVE", RESULT_OK+"");
+		finish();
 	}
 	
 	private void newSave(){

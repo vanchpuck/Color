@@ -18,6 +18,8 @@ import android.widget.TextView;
 
 public class ColorCombinationView extends LinearLayout implements ColorPicker.OnColorChangedListener{
 
+	private int duration = getResources().getInteger(android.R.integer.config_shortAnimTime);
+	
 	private class ResizersController{
 		
 //		private LinearLayout leftResizersPane;
@@ -27,7 +29,6 @@ public class ColorCombinationView extends LinearLayout implements ColorPicker.On
 //			leftResizersPane = new LinearLayout(getContext());
 			rightResizersPane = new LinearLayout(getContext());
 			
-//			leftResizersPane.setOrientation(VERTICAL);
 //			leftResizersPane.setBackgroundColor(Color.BLUE);		
 //			leftResizersPane.setLayoutParams(new LinearLayout.LayoutParams(0, LayoutParams.FILL_PARENT, 0.2f));
 			
@@ -37,8 +38,7 @@ public class ColorCombinationView extends LinearLayout implements ColorPicker.On
 			
 			ResizersPair firstPair = addPair();
 			firstPair.rightResizer.setMargin((Resizer.HEIGHT>>1)*-1);
-			firstPair.rightResizer.setBackgroundColor(Color.LTGRAY);
-						
+			firstPair.rightResizer.setAlpha(0f);
 		}
 		
 		public ResizersPair addPair(){
@@ -69,9 +69,28 @@ public class ColorCombinationView extends LinearLayout implements ColorPicker.On
 		}
 		
 		public void removeAllPairs(){
+			rightResizersPane.removeAllViews();
 			ResizersPair firstPair = resController.addPair();
 			firstPair.rightResizer.setMargin((Resizer.HEIGHT>>1)*-1);
-			firstPair.rightResizer.setBackgroundColor(Color.LTGRAY);
+			firstPair.rightResizer.setAlpha(0f);
+		}
+		
+		public void hideAllPairs(){
+			for(int i=0; i<resController.getResCount(); i++){
+				((ImageView)resController.rightResizersPane.getChildAt(i)).animate()
+																		.alpha(0f)
+																		.setDuration(duration)
+																		.setListener(null);
+			}
+		}
+		
+		public void showAllPairs(){
+			for(int i=0; i<resController.getResCount(); i++){
+				((ImageView)resController.rightResizersPane.getChildAt(i)).animate()
+																		.alpha(1f)
+																		.setDuration(duration)
+																		.setListener(null);
+			}
 		}
 		
 		public void setPair(int idx){
@@ -89,6 +108,10 @@ public class ColorCombinationView extends LinearLayout implements ColorPicker.On
 		public LinearLayout getRightPane(){
 			return rightResizersPane;
 		}
+		
+		public int getResCount(){
+			return rightResizersPane.getChildCount();
+		}
 	}
 	
 	private class ResizersPair{		
@@ -102,14 +125,16 @@ public class ColorCombinationView extends LinearLayout implements ColorPicker.On
 		}
 	}
 	
-	private class Resizer extends View{
+	private class Resizer extends ImageView{
 
-		public final static int HEIGHT = 30;
+		public final static int HEIGHT = 60;
 		
 		
 		public Resizer(Context context) {
 			super(context);
-			this.setBackgroundColor(Color.YELLOW);
+//			this.setBackgroundColor(Color.YELLOW);
+//			this.setBackgroundDrawable(getResources().getDrawable(R.drawable.arrow));
+			this.setImageDrawable(getResources().getDrawable(R.drawable.arrow));
 			this.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT, HEIGHT));
 		}
 		
@@ -126,11 +151,15 @@ public class ColorCombinationView extends LinearLayout implements ColorPicker.On
 			
 			int idx = ((LinearLayout)this.getParent()).indexOfChild(this);
 			
+			Log.w("IDXX", idx+"" );
+			
+			if(idx == 0 || idx == resController.rightResizersPane.getChildCount()-1){
+				Log.w("IDXX", "RETURN!!!" );
+				return false;
+			}
+			Log.w("IDXX", "NOT RETURN!!!" );
+			
 			int action = MotionEventCompat.getActionMasked(event);
-//			Log.w("IDX", this.idx+"");
-	        
-			
-			
 		    switch(action) {
 		    	case (MotionEvent.ACTION_DOWN) :
 		    		startY = (int)event.getY();
@@ -222,7 +251,9 @@ public class ColorCombinationView extends LinearLayout implements ColorPicker.On
 			for(int i=0; i<childCount; i++){
 				cBlock = (ColorBlock)this.getChildAt(i);
 				cBlock.setHeight(cBlock.getHeight() + height/childCount);
-			}			
+			}	
+			
+			resController.removePair(idx+1);
 			
 		}
 		
@@ -242,22 +273,23 @@ public class ColorCombinationView extends LinearLayout implements ColorPicker.On
 		
 		public BinPane(Context context, AttributeSet attrs) {
 			super(context,attrs);
-			this.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT, 50));
+			this.setLayoutParams(new LinearLayout.LayoutParams(0, LayoutParams.FILL_PARENT, 0.1f));
 			this.setOrientation(HORIZONTAL);
-			this.setGravity(Gravity.CENTER_HORIZONTAL);
+			this.setGravity(Gravity.CENTER);
+			setAlpha(0f);
 			
 			ImageView bin = new ImageView(getContext());
 			bin.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
-			bin.setImageResource(R.drawable.ic_launcher);
+			bin.setImageResource(R.drawable.content_discard);
 			
-			TextView text = new TextView(getContext());
-			text.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
-			text.setText(getContext().getResources().getString (R.string.bin_text));
-			text.setTextSize(20);
-			text.setBackgroundColor(Color.LTGRAY);
+//			TextView text = new TextView(getContext());
+//			text.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+//			text.setText(getContext().getResources().getString (R.string.bin_text));
+//			text.setTextSize(20);
+//			text.setBackgroundColor(Color.LTGRAY);
 			
 			this.addView(bin);
-			this.addView(text);
+//			this.addView(text);
 			
 			this.setOnDragListener(new OnDragListener() {
 				
@@ -289,6 +321,8 @@ public class ColorCombinationView extends LinearLayout implements ColorPicker.On
 							idx = ((LinearLayout)block.getParent()).indexOfChild(block);
 							Log.w("DEL_IDX", idx+"");
 							colorsPane.removeColor(idx);
+							binPane.animate().alpha(0f).setDuration(duration).setListener(null);
+							resController.showAllPairs();
 							return true;
 						case DragEvent.ACTION_DRAG_ENDED:
 							/* REMOVE COLOR FILTER*/
@@ -313,6 +347,7 @@ public class ColorCombinationView extends LinearLayout implements ColorPicker.On
 			this.setBackgroundColor(color);
 			this.setOnDragListener(new OnDragListener() {
 				
+				
 				@Override
 				public boolean onDrag(View v, DragEvent event) {
 					final int action = event.getAction();
@@ -320,6 +355,8 @@ public class ColorCombinationView extends LinearLayout implements ColorPicker.On
 					// Handles each of the expected events
 					switch(action) {
 					 	case DragEvent.ACTION_DRAG_STARTED :
+					 		resController.hideAllPairs();
+					 		binPane.animate().alpha(1f).setDuration(duration).setListener(null);
 					 		return true;
 					 		
 					 	case DragEvent.ACTION_DRAG_ENTERED :
@@ -329,19 +366,20 @@ public class ColorCombinationView extends LinearLayout implements ColorPicker.On
 					 		Log.w("ColorDragDrop", "Y location: "+event.getY()+" border = "+(v.getHeight()/2));
 					 		idx = ((LinearLayout)v.getParent()).indexOfChild(v);
 							if(event.getY() > v.getHeight()/2){
-								resController.getPair(idx+1).rightResizer.setBackgroundColor(Color.BLACK);
-								resController.getPair(idx).rightResizer.setBackgroundColor(Color.YELLOW);
+								resController.getPair(idx+1).rightResizer.setAlpha(1f);
+								resController.getPair(idx).rightResizer.setAlpha(0f);
 							}
 							else{
-								resController.getPair(idx+1).rightResizer.setBackgroundColor(Color.YELLOW);
-								resController.getPair(idx).rightResizer.setBackgroundColor(Color.BLACK);
+								resController.getPair(idx+1).rightResizer.setAlpha(0f);	
+								resController.getPair(idx).rightResizer.setAlpha(1f);	
 							}
 							return true;
 						
 						case DragEvent.ACTION_DRAG_EXITED :
-							idx = ((LinearLayout)v.getParent()).indexOfChild(v);
-							resController.getPair(idx).rightResizer.setBackgroundColor(Color.YELLOW);
-							resController.getPair(idx+1).rightResizer.setBackgroundColor(Color.YELLOW);
+							resController.hideAllPairs();
+//							idx = ((LinearLayout)v.getParent()).indexOfChild(v);
+//							resController.getPair(idx).rightResizer.setBackgroundColor(Color.YELLOW);
+//							resController.getPair(idx+1).rightResizer.setBackgroundColor(Color.YELLOW);
 							return true;
 							
 						case DragEvent.ACTION_DROP:
@@ -350,13 +388,14 @@ public class ColorCombinationView extends LinearLayout implements ColorPicker.On
 							View view = (View) event.getLocalState();
 							ColorsPane owner = (ColorsPane) view.getParent();
 							
-							resController.getPair(idx+1).rightResizer.setBackgroundColor(Color.YELLOW);
-							resController.getPair(idx).rightResizer.setBackgroundColor(Color.YELLOW);
+//							resController.getPair(idx+1).rightResizer.setBackgroundColor(Color.YELLOW);
+//							resController.getPair(idx).rightResizer.setBackgroundColor(Color.YELLOW);
 							owner.removeView(view);
 							owner.addView(view, idx);
 							
 							owner.refreshResizers();
-														
+							binPane.animate().alpha(0f).setDuration(duration).setListener(null);
+							resController.showAllPairs();							
 							return true;
 							
 						case DragEvent.ACTION_DRAG_ENDED :
@@ -435,9 +474,12 @@ public class ColorCombinationView extends LinearLayout implements ColorPicker.On
 		
 //		setBackgroundColor(Color.RED);
 		
+		this.setOrientation(HORIZONTAL);
+		this.setBackgroundColor(0xFFF8F8FF);
+		
 		LinearLayout workspace = new LinearLayout(context);
 		workspace.setOrientation(LinearLayout.HORIZONTAL);
-		workspace.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT, 0, 1f));
+		workspace.setLayoutParams(new LinearLayout.LayoutParams(0, LayoutParams.FILL_PARENT, 1f));
 		
 		resController = new ResizersController();
 		colorsPane = new ColorsPane(context, attrs);
@@ -447,8 +489,9 @@ public class ColorCombinationView extends LinearLayout implements ColorPicker.On
 		
 		workspace.addView(colorsPane);
 		workspace.addView(resController.getRightPane());
-		this.addView(workspace);
 		this.addView(binPane);
+		this.addView(workspace);
+		
 		
 		
 		
