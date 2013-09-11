@@ -5,10 +5,13 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.widget.AdapterView;
+import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -16,6 +19,8 @@ import android.widget.SimpleCursorAdapter;
 
 public class LoadActivity extends Activity{
 
+	protected final static int CM_DELETE_ID = 1;
+	
 	private SaveStore store;
 	private StoreSQLiteHelper dbHelper;
 	
@@ -36,8 +41,8 @@ public class LoadActivity extends Activity{
 		startManagingCursor(cursor);
 		
 		// формируем столбцы сопоставления
-		String[] from = new String[] { StoreSQLiteHelper.TabTitle.COL_NAME};
-		int[] to = new int[] { R.id.item_name};
+		String[] from = new String[] { StoreSQLiteHelper.TabTitle.COL_NAME, StoreSQLiteHelper.TabTitle.COL_CREATE_DATE};
+		int[] to = new int[] { R.id.item_name, R.id.item_date};
 		
 		adapter = new SimpleCursorAdapter(this, R.layout.list_item, cursor, from, to);
 		
@@ -69,6 +74,27 @@ public class LoadActivity extends Activity{
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.activity_load, menu);
 		return super.onCreateOptionsMenu(menu);
+	}
+	
+	@Override
+	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
+		super.onCreateContextMenu(menu, v, menuInfo);
+		menu.add(0, CM_DELETE_ID, 0, R.string.cm_delete_btn);
+	}
+	
+	@Override
+	public boolean onContextItemSelected(MenuItem item) {
+		if (item.getItemId() == CM_DELETE_ID) {
+			// получаем из пункта контекстного меню данные по пункту списка 
+			AdapterContextMenuInfo acmi = (AdapterContextMenuInfo) item.getMenuInfo();
+			// извлекаем id записи и удаляем соответствующую запись в БД
+			Log.w("LoadActivity.onContextItemSelected", acmi.id+"");
+			store.delSave(acmi.id);
+			// обновляем курсор
+			cursor.requery();
+			return true;
+		}
+		return super.onContextItemSelected(item);
 	}
 	
 //	@Override

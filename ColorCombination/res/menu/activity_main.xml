@@ -1,27 +1,27 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     
     <item android:id="@+id/add_color"
-        android:title="@string/menu_settings"
+        android:title="@string/menu_add_color"
         android:icon="@drawable/content_new"
         android:showAsAction="ifRoom" />
         
     <item android:id="@+id/expand"
-        android:title="test1"
+        android:title="@string/menu_expand"
         android:icon="@drawable/av_full_screen"
         android:showAsAction="ifRoom" />
     
     <item android:id="@+id/save"
-        android:title="test2"
+        android:title="@string/menu_save"
         android:icon="@drawable/content_save"
         android:showAsAction="ifRoom" />
     
     <item android:id="@+id/load"
-        android:title="test3"
+        android:title="@string/menu_load"
         android:icon="@drawable/collection"
         android:showAsAction="ifRoom" />
     
     <item android:id="@+id/clear"
-        android:title="test"
+        android:title="@string/menu_clear"
         android:icon="@drawable/content_remove"
         android:showAsAction="ifRoom" />
 </menu>

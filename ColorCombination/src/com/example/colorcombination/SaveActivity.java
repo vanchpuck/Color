@@ -43,9 +43,7 @@ public class SaveActivity extends Activity{
 	private EditText saveName;
 	private Cursor cursor;
 	
-	AlertDialog.Builder builder;
-	
-	FragmentManager fManager;
+	private FragmentManager fManager;
 	
 	private class ResaveFragment extends DialogFragment {
 	    
@@ -59,13 +57,14 @@ public class SaveActivity extends Activity{
 	    public Dialog onCreateDialog(Bundle savedInstanceState) {
 	        // Use the Builder class for convenient dialog construction
 	        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-	        builder.setMessage("!!!")
-	               .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+	        builder.setMessage(R.string.resave_dialog)
+	               .setPositiveButton(R.string.resave_ok, new DialogInterface.OnClickListener() {
 	                   public void onClick(DialogInterface dialog, int id) {
-	                       resave(saveId);
+	                       Log.w("RESAVE", "RESAVE NAH!!!!");
+	                	   resave(saveId);
 	                   }
 	               })
-	               .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+	               .setNegativeButton(R.string.resave_cancel, new DialogInterface.OnClickListener() {
 	                   public void onClick(DialogInterface dialog, int id) {
 	                       // User cancelled the dialog
 	                   }
@@ -90,8 +89,8 @@ public class SaveActivity extends Activity{
 		startManagingCursor(cursor);
 		
 		// формируем столбцы сопоставления
-		String[] from = new String[] { StoreSQLiteHelper.TabTitle.COL_NAME};
-		int[] to = new int[] { R.id.item_name};
+		String[] from = new String[] { StoreSQLiteHelper.TabTitle.COL_NAME, StoreSQLiteHelper.TabTitle.COL_CREATE_DATE};
+		int[] to = new int[] { R.id.item_name, R.id.item_date};
 		
 		adapter = new SimpleCursorAdapter(this, R.layout.list_item, cursor, from, to);
 		
@@ -103,12 +102,12 @@ public class SaveActivity extends Activity{
 		saveList.setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//				Log.w("ID_2", id+"");
+				Log.w("ID_SELECTED", id+"");
 //				AlertDialog dialog = builder.create();
 //				dialog.show();
 //				dialog.get
-				ResaveFragment d = new ResaveFragment(id);
-				d.show(fManager, null);
+//				ResaveFragment d = new ResaveFragment(id);
+				new ResaveFragment(id).show(fManager, null);
 			}
 		});
 		
@@ -168,7 +167,7 @@ public class SaveActivity extends Activity{
 	
 	private void resave(long id){
 		Intent intent = new Intent();
-		intent.putExtra("id", saveName.getText().toString());
+		intent.putExtra("id", id);
 		setResult(RESULT_OK, intent);
 		Log.w("RESAVE", RESULT_OK+"");
 		finish();

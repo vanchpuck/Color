@@ -35,7 +35,7 @@ public class StoreSQLiteHelper extends SQLiteOpenHelper{
 		private final static String STMT_CREATE = 
 			"create table "+NAME+" ( "+
 				COL_ID+" integer primary key autoincrement, "+
-				COL_TITLE_ID+" integer not null references "+TabTitle.NAME+"("+TabTitle.COL_ID+") ON DELETE CASCADE, "+
+				COL_TITLE_ID+" integer not null references "+TabTitle.NAME+"("+TabTitle.COL_ID+"), "+
 				COL_COLOR+" integer not null, "+
 				COL_SIZE+" real not null "+
 				//"FOREIGN KEY("+COL_TITLE_ID+") REFERENCES "+tabTitle.NAME+"("+tabTitle.COL_ID+") "+

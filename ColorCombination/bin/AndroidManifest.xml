@@ -27,15 +27,23 @@
         
         <activity
             android:name=".SaveActivity"
-            android:label="@string/title_activity_main" >   
+            android:label="@string/title_activity_save" >   
+            <!-- <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.colorcombination.MainActivity" />     -->  
+        </activity>
+        
+        <activity
+            android:name=".LoadActivity"
+            android:label="@string/title_activity_load" >   
             <!-- <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.colorcombination.SaveActivity.java" />   -->      
         </activity>
         
         <activity
-            android:name=".LoadActivity"
-            android:label="@string/title_activity_main" >   
+            android:name=".ReviewActivity"
+            android:label="@string/title_activity_review" >   
             <!-- <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.colorcombination.SaveActivity.java" />   -->      

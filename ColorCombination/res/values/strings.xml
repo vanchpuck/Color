@@ -1,20 +1,30 @@
 <resources>
 
     <string name="app_name">ColorCombination</string>
-    <string name="hello_world">Hello world!</string>
-    <string name="menu_settings">Settings</string>
-    <string name="title_activity_main">MainActivity</string>
-    <string name="bin_text">Drop here!</string>
+    <string name="title_activity_main"></string>
+    <string name="title_activity_save">Сохранить</string>
+    <string name="title_activity_load">Загрузить</string>
+    <string name="title_activity_review">Загрузить</string>
+    
+    <string name="menu_add_color">Добавить цвет</string>
+    <string name="menu_expand">Просмотр</string>
+    <string name="menu_save">Сохранить</string>
+    <string name="menu_load">Загрузить</string>
+    <string name="menu_clear">Очистить</string>
+    
+    <string name="max_color_count">Достигнуто максимальное количество цветов</string>
     
     <string name="settings_bg_color_dialog">Выберите цвет</string>
     <string name="settings_bg_color_confirm">Готово</string>
     <string name="settings_default_color_confirm">Отмена</string>
     
     <string name="save_hint_name">Новая запись:</string>
-    <string name="menu_save">Сохранить</string>
+    
     <string name="cm_delete_btn">Удалить запись</string>
     <string name="resave_dialog">Перезаписать?</string>
     <string name="resave_ok">Ок</string>
     <string name="resave_cancel">Отмена</string>
+    
+    <color name="background">#FFF8F8FF</color>
 
 </resources>

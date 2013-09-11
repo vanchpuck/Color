@@ -1,5 +1,9 @@
 package com.example.colorcombination;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -11,9 +15,11 @@ public class SaveStore {
 	
 	private SQLiteDatabase db;
 	private StoreSQLiteHelper dbHelper;
+	private SimpleDateFormat dateFormat;
 	
 	public SaveStore(Context context){
 		dbHelper = new StoreSQLiteHelper(context);
+		dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 	}
 	
 	public void openToRead() throws SQLException {
@@ -37,9 +43,10 @@ public class SaveStore {
 	
 		db.beginTransaction();
 		try{
+			Log.w("INSERT", "BEGIN");
 			ContentValues values = new ContentValues();
 			values.put(StoreSQLiteHelper.TabTitle.COL_NAME, name);
-			values.put(StoreSQLiteHelper.TabTitle.COL_CREATE_DATE, "date('now')");
+			values.put(StoreSQLiteHelper.TabTitle.COL_CREATE_DATE, dateFormat.format(new Date()));
 			long insertId = db.insertOrThrow(StoreSQLiteHelper.TabTitle.NAME, null, values);
 			Log.w("INSERT", "ID: :"+insertId+"");
 			
@@ -55,47 +62,51 @@ public class SaveStore {
 				Log.w("INSERT", id+"");
 			}
 			db.setTransactionSuccessful();
-			Log.w("TRANSACTION", "SUCCEES");
+			Log.w("SAVE", "SUCCEES");
 		}
 		catch(android.database.sqlite.SQLiteException exc){
-			Log.w("TRANSACTION", "Exception");
+			Log.w("SAVE", "Exception: "+exc.getMessage());
 		}
 		finally{
 			db.endTransaction();
-			Log.w("TRANSACTION", "END TRANSACTION");
+			Log.w("SAVE", "END TRANSACTION");
 		}
 	}
 	
 	public void save(long id, String name, ColorCombinationView colors){
 		
 		/* ƒŒ¡¿¬»“‹ “–¿Õ«¿ ÷»ﬁ */
-			
 		db.beginTransaction();
 		try{
 			ContentValues values = new ContentValues();
 			values.put(StoreSQLiteHelper.TabTitle.COL_NAME, name);
-			values.put(StoreSQLiteHelper.TabTitle.COL_CREATE_DATE, "date('now')");
-			db.update(StoreSQLiteHelper.TabTitle.NAME, values, StoreSQLiteHelper.TabTitle.COL_ID+"="+id, null);
-			
+			values.put(StoreSQLiteHelper.TabTitle.COL_CREATE_DATE, dateFormat.format(new Date()));
+			Log.w("RESAVE", 1+"");
+//			db.update(StoreSQLiteHelper.TabTitle.NAME, values, StoreSQLiteHelper.TabTitle.COL_ID+"="+id, null);
+			Log.w("RESAVE", 2+"");
 			db.delete(StoreSQLiteHelper.TabContent.NAME, StoreSQLiteHelper.TabContent.COL_TITLE_ID+"="+id, null);
-			
+			Log.w("RESAVE", 3+"");
 			float height = 0;
 			for(int i=0; i<colors.getColorsCount(); i++){
 				values.clear();
 				values.put(StoreSQLiteHelper.TabContent.COL_TITLE_ID, id);
 				values.put(StoreSQLiteHelper.TabContent.COL_COLOR, colors.getColorBlock(i).getColor());
 				height = (float)colors.getColorBlock(i).getHeight()/(float)colors.getHeight();
-				values.put(StoreSQLiteHelper.TabContent.COL_SIZE, colors.getColorBlock(i).getHeight()/colors.getHeight());
+				values.put(StoreSQLiteHelper.TabContent.COL_SIZE, height);
+				Log.w("RESAVE", "color = "+colors.getColorBlock(i).getColor());
+				Log.w("RESAVE", "block = "+height);
 				db.insert(StoreSQLiteHelper.TabContent.NAME, null, values);
+				Log.w("RESAVE", 4+"");
 			}
 			db.setTransactionSuccessful();
 		}
 		catch(android.database.sqlite.SQLiteException exc){
-			Log.w("TRANSACTION", "Exception");
+			exc.printStackTrace();
+			Log.w("RESAVE", "Exception: "+exc.getMessage());
 		}
 		finally{
 			db.endTransaction();
-			Log.w("TRANSACTION", "END TRANSACTION");
+			Log.w("RESAVE", "END TRANSACTION");
 		}
 	}
 	

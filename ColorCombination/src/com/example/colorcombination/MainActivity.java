@@ -1,5 +1,8 @@
 package com.example.colorcombination;
 
+import java.io.ObjectOutputStream.PutField;
+import java.util.ArrayList;
+
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
@@ -21,7 +24,6 @@ public class MainActivity extends Activity {
 	private SaveStore store;
 	
 	ColorCombinationView colors;
-	int[] colorTab = new int[]{Color.BLACK, Color.RED, Color.CYAN, Color.MAGENTA, Color.GRAY};
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -40,26 +42,19 @@ public class MainActivity extends Activity {
         getMenuInflater().inflate(R.menu.activity_main, menu);
         return super.onCreateOptionsMenu(menu);
     }
-    
-    int pos = 0;
-    public void addColor(View v){
-    	colors.addColor(colorTab[pos]);
-    	pos++;
-    }
-    
-    
+        
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 		// Handle presses on the action bar items
 		switch (item.getItemId()) {
 			case R.id.add_color:
-				new ColorPicker(MainActivity.this, colors, Color.WHITE).show();
+				new ColorPicker(MainActivity.this, colors, Color.GREEN).show();
 				return true;
 			case R.id.clear:
 				colors.removeAllColors();
 				return true;
 			case R.id.expand:
-				/* «¿œ”— ¿≈Ã ÕŒ¬”ﬁ ¿ “»¬»“» Õ¿ œŒÀÕ€… › –¿Õ */
+				review();
 				return true;
 			case R.id.save:
 				saveColors();
@@ -74,13 +69,19 @@ public class MainActivity extends Activity {
 		}
     }
 
-    public void saveColors(){
+    protected void review(){
+    	Intent intent = new Intent(this, ReviewActivity.class);
+    	intent.putExtra(getPackageName()+".basics", colors.getBlockBasics());
+    	startActivity(intent);
+    }
+    
+    protected void saveColors(){
     	Log.w("SAVE", "SAVE BEGIN");
 		Intent intent = new Intent(this, SaveActivity.class);
 		startActivityForResult(intent, REQUEST_CODE_SAVE);
 	}
     
-    public void loadColors(){
+    protected void loadColors(){
     	Log.w("LOAD", "LOAD BEGIN");
 		Intent intent = new Intent(this, LoadActivity.class);
 		startActivityForResult(intent, REQUEST_CODE_LOAD);
@@ -92,7 +93,7 @@ public class MainActivity extends Activity {
 		if(resultCode == RESULT_OK){
 			// id ‚˚·‡ÌÌÓÈ ‚ ÒÔËÒÍÂ Á‡ÔËÒË
 			long id = data.getLongExtra("id", -1);
-			Log.w("SAVE ON RESULT", "IF OK");
+			Log.w("SAVE ON RESULT", "id="+id);
 			switch(requestCode){
 				case REQUEST_CODE_SAVE :
 					store.openToWrite();
