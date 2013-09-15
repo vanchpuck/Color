@@ -16,21 +16,28 @@ public class SaveStore {
 	private SQLiteDatabase db;
 	private StoreSQLiteHelper dbHelper;
 	private SimpleDateFormat dateFormat;
+	private Context context;
 	
 	public SaveStore(Context context){
 		dbHelper = new StoreSQLiteHelper(context);
 		dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		this.context = context;
 	}
 	
 	public void openToRead() throws SQLException {
+		dbHelper = new StoreSQLiteHelper(context);
 		db = dbHelper.getReadableDatabase();
+		Log.w("STORE", "TO_READ_1");
 	}
 	
 	public void openToWrite() throws SQLException {
+		dbHelper = new StoreSQLiteHelper(context);
 		db = dbHelper.getWritableDatabase();
+		Log.w("STORE", "TO_WRITE_1");
 	}
 	
 	public void close() {
+		db.close();
 		dbHelper.close();
 	}
 	
@@ -112,7 +119,7 @@ public class SaveStore {
 	
 	public void load(long id, ColorCombinationView container){
 		
-		Log.w("LOAD", "BEGIN");
+		Log.w("LOAD", "BEGIN!!!");
 		container.removeAllColors();
 		Log.w("LOAD", "1");
 		

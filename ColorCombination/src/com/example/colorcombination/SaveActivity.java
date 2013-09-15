@@ -36,7 +36,6 @@ public class SaveActivity extends Activity{
 	protected final static int CM_DELETE_ID = 1;
 	
 	private SaveStore store;
-	private StoreSQLiteHelper dbHelper;
 	
 	private SimpleCursorAdapter adapter;
 	private ListView saveList;
@@ -77,6 +76,7 @@ public class SaveActivity extends Activity{
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		Log.w("SAVE_CREATE", "1");
 		setContentView(R.layout.save_activity);
 		
 		fManager = this.getFragmentManager();
@@ -86,6 +86,7 @@ public class SaveActivity extends Activity{
 		store.openToWrite();
 		
 		cursor = store.getSaveList();
+		
 		startManagingCursor(cursor);
 		
 		// формируем столбцы сопоставления
@@ -156,13 +157,32 @@ public class SaveActivity extends Activity{
 	@Override
 	protected void onStop() {
 		super.onStop();
+		cursor.close();
 		store.close();
 	}
 	
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
+		cursor.close();
 		store.close();
+	}
+	
+	@Override
+	protected void onResume() {
+		Log.w("SAVE_RESUME", "1");
+		store.openToWrite();
+		cursor = store.getSaveList();
+		super.onResume();
+		
+		
+	}
+	
+	@Override
+	protected void onStart() {
+		Log.w("SAVE_START", "1");
+		super.onStart();
+//		store.openToWrite();
 	}
 	
 	private void resave(long id){

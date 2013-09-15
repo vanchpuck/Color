@@ -1,7 +1,15 @@
 package com.example.colorcombination;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.ShapeDrawable;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.v4.view.MotionEventCompat;
@@ -25,9 +33,10 @@ public class ColorCombinationView extends LinearLayout implements ColorPicker.On
 		private LinearLayout rightResizersPane;
 		
 		private ResizersController(){
+			
 //			leftResizersPane = new LinearLayout(getContext());
 			rightResizersPane = new LinearLayout(getContext());
-			
+			rightResizersPane.setPadding(0, 5, 0, 0);
 //			leftResizersPane.setBackgroundColor(Color.BLUE);		
 //			leftResizersPane.setLayoutParams(new LinearLayout.LayoutParams(0, LayoutParams.FILL_PARENT, 0.2f));
 			
@@ -223,6 +232,7 @@ public class ColorCombinationView extends LinearLayout implements ColorPicker.On
 		
 		public ColorsPane(Context context, AttributeSet attrs) {
 			super(context,attrs);
+			setBackgroundResource(R.drawable.shadow);
 			this.setLayoutParams(new LinearLayout.LayoutParams(0, LayoutParams.FILL_PARENT, 1f));
 			this.setOrientation(VERTICAL);
 		}
@@ -250,7 +260,7 @@ public class ColorCombinationView extends LinearLayout implements ColorPicker.On
 				// Пройдёмся по всем блокам и изменим размеры
 				for(int i=0; i<childCount; i++){	
 					cBlock = (ColorBlock)this.getChildAt(i);
-					cBlock.setHeight(cBlock.getHeight() - newHeight/(childCount));
+					cBlock.setHeight(cBlock.getActualHeight() - newHeight/(childCount));
 //					cBlock.setHeight(cBlock.getHeight() - cBlock.getHeight()/this.getHeight()*newHeight);
 				}
 			}
@@ -280,9 +290,9 @@ public class ColorCombinationView extends LinearLayout implements ColorPicker.On
 			
 		}
 		
-		public void setColorBlock(ColorBlock color, int idx){
-			
-		}
+//		public void setColorBlock(ColorBlock color, int idx){
+//			
+//		}
 
 		
 	}
@@ -352,11 +362,15 @@ public class ColorCombinationView extends LinearLayout implements ColorPicker.On
 				}
 			});
 		}
+		Paint p1 = new Paint();
+		
 		
 	}
 	
 
 	public class ColorBlock extends View implements ColorPicker.OnColorChangedListener{
+		
+		private int height;
 		
 		private class BlockClickListener implements View.OnClickListener{
 			private int initColor;
@@ -475,7 +489,7 @@ public class ColorCombinationView extends LinearLayout implements ColorPicker.On
 						
 			int index = ((LinearLayout)this.getParent()).indexOfChild(this);
 			
-			Log.w("IDX", index+"");
+			Log.w("onSizeChanged IDX", index+"");
 			
 			int margin = h-Resizer.HEIGHT;
 
@@ -486,10 +500,15 @@ public class ColorCombinationView extends LinearLayout implements ColorPicker.On
 		
 		public void setHeight(int height){
 			this.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT, height));
+			this.height = height;
+		}
+		
+		public int getActualHeight() {
+			return height;
 		}
 		
 		public BlockBasic getBlockBasic(){
-			return new BlockBasic(this.getColor(), (float)this.getHeight()/(float)colorsPane.getHeight());
+			return new BlockBasic(this.getColor(), (float)this.getHeight()/(float)colorsPane.getHeight(), height);
 		}
 
 		@Override
@@ -504,17 +523,18 @@ public class ColorCombinationView extends LinearLayout implements ColorPicker.On
 
 		private int color;
 		private float height;
+		private int actHeight;
 		
-		public BlockBasic(int color, float height){
+		public BlockBasic(int color, float height, int actHeight){
 			this.color = color;
 			this.height = height;
+			this.actHeight = actHeight;
 		}
 		
 		public BlockBasic(Parcel parcel){
 			this.color = parcel.readInt();
 			this.height = parcel.readFloat();
-			Log.w("BlockBasic1", color+"");
-			Log.w("BlockBasic2", height+"");
+			this.actHeight = parcel.readInt();
 		}
 		
 		public final static Parcelable.Creator<BlockBasic> CREATOR = new Parcelable.Creator<BlockBasic>() {
@@ -536,6 +556,7 @@ public class ColorCombinationView extends LinearLayout implements ColorPicker.On
 		public void writeToParcel(Parcel dest, int flags) {
 			dest.writeInt(color);
 			dest.writeFloat(height);
+			dest.writeInt(actHeight);
 		}
 		
 		public int getColor(){
@@ -544,6 +565,10 @@ public class ColorCombinationView extends LinearLayout implements ColorPicker.On
 		
 		public float getHeight(){
 			return this.height;
+		}
+		
+		public int getActHeight(){
+			return this.actHeight;
 		}
 		
 	}
@@ -571,14 +596,13 @@ public class ColorCombinationView extends LinearLayout implements ColorPicker.On
 		colorsPane = new ColorsPane(context, attrs);
 		binPane = new BinPane(context, attrs);
 		
+//		colorsPane.setBackgroundResource(R.drawable.test);
 //		colorsPane.setBackgroundColor(Color.GREEN);
 		
 		workspace.addView(colorsPane);
 		workspace.addView(resController.getRightPane());
 		this.addView(binPane);
 		this.addView(workspace);
-		
-		
 		
 		
 //		leftResizersPane = (ResizersPane) getChildAt(0);
@@ -589,6 +613,7 @@ public class ColorCombinationView extends LinearLayout implements ColorPicker.On
 //		leftResizersPane.setBackgroundColor(Color.RED);
 
 	}
+	
 	
 	public void addColor(int color){
 		if(colorsPane.getChildCount() < 5){

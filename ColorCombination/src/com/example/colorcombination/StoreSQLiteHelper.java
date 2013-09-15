@@ -46,6 +46,7 @@ public class StoreSQLiteHelper extends SQLiteOpenHelper{
 
 	public StoreSQLiteHelper(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
+		
 		// TODO Auto-generated constructor stub
 	}
 
@@ -60,7 +61,7 @@ public class StoreSQLiteHelper extends SQLiteOpenHelper{
 		super.onOpen(db);
 		db.execSQL("PRAGMA foreign_keys=ON;");
 	}
-
+	
 	@Override
 	public void onUpgrade(SQLiteDatabase arg0, int oldVersion, int newVersion) {
 		/*онйю мхвецн ме декюел*/

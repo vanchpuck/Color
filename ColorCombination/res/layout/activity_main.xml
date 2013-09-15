@@ -1,18 +1,37 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:ads="schemas.android.com/apk/lib/com.google.ads"
     android:id="@+id/top_container"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent" 
     android:background="@color/background">
-        
-	<com.example.colorcombination.ColorCombinationView
-	    android:id="@+id/combination_view"
-	    xmlns:android="http://schemas.android.com/apk/res/android"
+    
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	    xmlns:tools="http://schemas.android.com/tools"
 	    android:orientation="vertical"
 	    android:layout_width="match_parent"
 	    android:layout_height="0dp"
-	    android:layout_weight="1" > 	    
-	</com.example.colorcombination.ColorCombinationView>
+	    android:layout_weight="1" 
+	    android:background="@color/background">
+        
+		<com.example.colorcombination.ColorCombinationView
+		    android:id="@+id/combination_view"
+		    xmlns:android="http://schemas.android.com/apk/res/android"
+		    android:orientation="vertical"
+		    android:layout_width="match_parent"
+		    android:layout_height="match_parent" > 	    
+		</com.example.colorcombination.ColorCombinationView>
+	
+	</LinearLayout>
+	
+	<!-- Реклама -->
+	<com.google.ads.AdView 
+	    android:id="@+id/adView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        ads:adSize="BANNER"
+        ads:adUnitId="@string/adMob" 
+        ads:loadAdOnCreate="true" />
 
 </LinearLayout>

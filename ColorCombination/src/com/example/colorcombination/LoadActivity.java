@@ -32,23 +32,23 @@ public class LoadActivity extends Activity{
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.load_activity);
-		
+		Log.w("LOAD", "1");
 		store = new SaveStore(this);
 		store.openToRead();
-		
+		Log.w("LOAD", "2");
 		cursor = store.getSaveList();
-		
+		Log.w("LOAD", "3");
 		startManagingCursor(cursor);
-		
+		Log.w("LOAD", "4");
 		// формируем столбцы сопоставления
 		String[] from = new String[] { StoreSQLiteHelper.TabTitle.COL_NAME, StoreSQLiteHelper.TabTitle.COL_CREATE_DATE};
 		int[] to = new int[] { R.id.item_name, R.id.item_date};
-		
+		Log.w("LOAD", "5");
 		adapter = new SimpleCursorAdapter(this, R.layout.list_item, cursor, from, to);
-		
+		Log.w("LOAD", "6");
 		saveList = (ListView) findViewById(R.id.load_list);
 		saveList.setAdapter(adapter);
-		
+		Log.w("LOAD", "7");
 		registerForContextMenu(saveList);
 		
 		saveList.setOnItemClickListener(new OnItemClickListener() {
@@ -57,17 +57,27 @@ public class LoadActivity extends Activity{
 				load(id);
 			}
 		});
+		Log.w("LOAD", "8");
 	}
 	
 	@Override
 	protected void onStop() {
-		
 		super.onStop();
+//		cursor.close();
+		store.close();
 	}
 	
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
+		cursor.close();
+		store.close();
+	}
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		store.openToRead();
 	}
 	
 	@Override
@@ -108,7 +118,8 @@ public class LoadActivity extends Activity{
 //				return super.onOptionsItemSelected(item);
 //		}
 //	}
-		
+	
+	
 	protected void load(long id){
 		Intent intent = new Intent();
 		intent.putExtra("id", id);

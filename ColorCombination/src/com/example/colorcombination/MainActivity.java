@@ -3,7 +3,9 @@ package com.example.colorcombination;
 import java.io.ObjectOutputStream.PutField;
 import java.util.ArrayList;
 
+
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
@@ -28,14 +30,47 @@ public class MainActivity extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.w("CREATE", "CREATE#####");
         setContentView(R.layout.activity_main);
-        
         store = new SaveStore(this);
         
         colors = (ColorCombinationView) findViewById(R.id.combination_view);
+//        if(!savedInstanceState.isEmpty()){
+////        	int c = savedInstanceState.getInt("color", 0);
+////	        if(c != 0){
+////	        	colors.addColor(c);
+////	        }
+//        }
         
     }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+    	super.onSaveInstanceState(outState);
+    	Log.w("onSave", "SAVE");
+    	outState.putParcelableArray(getPackageName()+".basics", colors.getBlockBasics());
+    }
+    
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+    	super.onRestoreInstanceState(savedInstanceState);
+    	Log.w("onRestore", "RESTORE");
+    	Parcelable[] basics = savedInstanceState.getParcelableArray(getPackageName()+".basics");
+    	
+    	ColorCombinationView.BlockBasic bBasic = null;
+    	for(int i=0; i<basics.length; i++){
+    		bBasic = (ColorCombinationView.BlockBasic) basics[i];
+    		colors.addColor(bBasic.getColor());
+    		colors.getColorBlock(i).setHeight(bBasic.getActHeight());
+    	}
+    	
+    }
+    
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+    	// TODO Auto-generated method stub
+    	super.onPostCreate(savedInstanceState);
+    }
     
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -48,7 +83,7 @@ public class MainActivity extends Activity {
 		// Handle presses on the action bar items
 		switch (item.getItemId()) {
 			case R.id.add_color:
-				new ColorPicker(MainActivity.this, colors, Color.GREEN).show();
+				new ColorPicker(MainActivity.this, colors, getResources().getColor(R.color.background)).show();
 				return true;
 			case R.id.clear:
 				colors.removeAllColors();
@@ -113,6 +148,5 @@ public class MainActivity extends Activity {
 			}
 		}
 	}
-
-    
+	
 }
