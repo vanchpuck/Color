@@ -1,4 +1,4 @@
-package com.example.colorcombination;
+package com.jonnygold.colors;
 
 import android.app.Activity;
 import android.content.Context;

@@ -1,4 +1,4 @@
-package com.example.colorcombination;
+package com.jonnygold.colors;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;

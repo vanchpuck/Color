@@ -1,4 +1,6 @@
-package com.example.colorcombination;
+package com.jonnygold.colors;
+
+import com.jonnygold.colors.R;
 
 import android.app.Activity;
 import android.app.AlertDialog;
