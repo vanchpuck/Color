@@ -1,7 +1,6 @@
 package com.example.colorcombination;
 
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 
 import android.content.ContentValues;
@@ -27,13 +26,11 @@ public class SaveStore {
 	public void openToRead() throws SQLException {
 		dbHelper = new StoreSQLiteHelper(context);
 		db = dbHelper.getReadableDatabase();
-		Log.w("STORE", "TO_READ_1");
 	}
 	
 	public void openToWrite() throws SQLException {
 		dbHelper = new StoreSQLiteHelper(context);
 		db = dbHelper.getWritableDatabase();
-		Log.w("STORE", "TO_WRITE_1");
 	}
 	
 	public void close() {
@@ -50,12 +47,12 @@ public class SaveStore {
 	
 		db.beginTransaction();
 		try{
-			Log.w("INSERT", "BEGIN");
+//			Log.w("INSERT", "BEGIN");
 			ContentValues values = new ContentValues();
 			values.put(StoreSQLiteHelper.TabTitle.COL_NAME, name);
 			values.put(StoreSQLiteHelper.TabTitle.COL_CREATE_DATE, dateFormat.format(new Date()));
 			long insertId = db.insertOrThrow(StoreSQLiteHelper.TabTitle.NAME, null, values);
-			Log.w("INSERT", "ID: :"+insertId+"");
+//			Log.w("INSERT", "ID: :"+insertId+"");
 			
 			float height = 0;
 			for(int i=0; i<colors.getColorsCount(); i++){
@@ -66,17 +63,17 @@ public class SaveStore {
 				height = (float)colors.getColorBlock(i).getHeight()/(float)colors.getHeight();
 				values.put(StoreSQLiteHelper.TabContent.COL_SIZE, height);
 				long id = db.insertOrThrow(StoreSQLiteHelper.TabContent.NAME, null, values);
-				Log.w("INSERT", id+"");
+//				Log.w("INSERT", id+"");
 			}
 			db.setTransactionSuccessful();
-			Log.w("SAVE", "SUCCEES");
+//			Log.w("SAVE", "SUCCEES");
 		}
 		catch(android.database.sqlite.SQLiteException exc){
-			Log.w("SAVE", "Exception: "+exc.getMessage());
+//			Log.w("SAVE", "Exception: "+exc.getMessage());
 		}
 		finally{
 			db.endTransaction();
-			Log.w("SAVE", "END TRANSACTION");
+//			Log.w("SAVE", "END TRANSACTION");
 		}
 	}
 	
@@ -88,11 +85,11 @@ public class SaveStore {
 			ContentValues values = new ContentValues();
 			values.put(StoreSQLiteHelper.TabTitle.COL_NAME, name);
 			values.put(StoreSQLiteHelper.TabTitle.COL_CREATE_DATE, dateFormat.format(new Date()));
-			Log.w("RESAVE", 1+"");
+
 //			db.update(StoreSQLiteHelper.TabTitle.NAME, values, StoreSQLiteHelper.TabTitle.COL_ID+"="+id, null);
-			Log.w("RESAVE", 2+"");
+
 			db.delete(StoreSQLiteHelper.TabContent.NAME, StoreSQLiteHelper.TabContent.COL_TITLE_ID+"="+id, null);
-			Log.w("RESAVE", 3+"");
+
 			float height = 0;
 			for(int i=0; i<colors.getColorsCount(); i++){
 				values.clear();
@@ -100,20 +97,18 @@ public class SaveStore {
 				values.put(StoreSQLiteHelper.TabContent.COL_COLOR, colors.getColorBlock(i).getColor());
 				height = (float)colors.getColorBlock(i).getHeight()/(float)colors.getHeight();
 				values.put(StoreSQLiteHelper.TabContent.COL_SIZE, height);
-				Log.w("RESAVE", "color = "+colors.getColorBlock(i).getColor());
-				Log.w("RESAVE", "block = "+height);
 				db.insert(StoreSQLiteHelper.TabContent.NAME, null, values);
-				Log.w("RESAVE", 4+"");
+
 			}
 			db.setTransactionSuccessful();
 		}
 		catch(android.database.sqlite.SQLiteException exc){
 			exc.printStackTrace();
-			Log.w("RESAVE", "Exception: "+exc.getMessage());
+//			Log.w("RESAVE", "Exception: "+exc.getMessage());
 		}
 		finally{
 			db.endTransaction();
-			Log.w("RESAVE", "END TRANSACTION");
+//			Log.w("RESAVE", "END TRANSACTION");
 		}
 	}
 	
@@ -121,7 +116,6 @@ public class SaveStore {
 		
 		Log.w("LOAD", "BEGIN!!!");
 		container.removeAllColors();
-		Log.w("LOAD", "1");
 		
 		Cursor cursor = db.query(
 				StoreSQLiteHelper.TabContent.NAME, 
@@ -133,8 +127,7 @@ public class SaveStore {
 				StoreSQLiteHelper.TabContent.COL_ID,
 				null
 		);
-		
-		Log.w("LOAD", "2");
+
 		// Добавляем цветовые панели
 		cursor.moveToFirst();
 		while(!cursor.isAfterLast()){
@@ -142,7 +135,7 @@ public class SaveStore {
 			container.addColor(cursor.getInt(0/*ПОДОБРАТЬ НОМЕР СТОЛБЦА*/));
 			cursor.moveToNext();
 		}
-		Log.w("LOAD", "3");
+
 		// Устанавливаем нужный размер цветовых панелей
 		cursor.moveToFirst();
 		for(int i=0; !cursor.isAfterLast(); i++){
@@ -151,9 +144,7 @@ public class SaveStore {
 			cursor.moveToNext();
 		}
 		cursor.close();
-		
-		
-		Log.w("LOAD", "4");
+
 	}
 	
 	public void delSave(long id){

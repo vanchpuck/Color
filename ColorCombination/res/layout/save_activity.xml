@@ -1,31 +1,51 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <LinearLayout 
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:ads="http://schemas.android.com/apk/lib/com.google.ads"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
 	android:orientation="vertical" 
 	android:background="@color/background">
 	
-	<TextView
-		android:id="@+id/save_hint_name"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_gravity="center_vertical"
-		android:layout_marginLeft="8dp"
-		android:text="@string/save_hint_name"
-		android:textSize="14sp" />
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	    xmlns:tools="http://schemas.android.com/tools"
+	    android:orientation="vertical"
+	    android:layout_width="match_parent"
+	    android:layout_height="0dp"
+	    android:layout_weight="1" 
+	    android:background="@color/background">
+    
+		<TextView
+			android:id="@+id/save_hint_name"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_gravity="center_vertical"
+			android:layout_marginLeft="8dp"
+			android:text="@string/save_hint_name"
+			android:textSize="14sp" />
+		
+		<EditText
+			android:id="@+id/save_name"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content" />
+		
+		<!-- ВОЗМОЖНО, СТОИТ ДОБАВИТЬ РАЗДЕЛИТЕЛЬ -->	
+		
+		<ListView
+			android:id="@+id/save_list"
+			android:layout_width="match_parent"
+			android:layout_height="0dp" 
+			android:layout_weight="1" />
 	
-	<EditText
-		android:id="@+id/save_name"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content" />
+	</LinearLayout>
 	
-	<!-- ВОЗМОЖНО, СТОИТ ДОБАВИТЬ РАЗДЕЛИТЕЛЬ -->	
-	
-	<ListView
-		android:id="@+id/save_list"
-		android:layout_width="match_parent"
-		android:layout_height="0dp" 
-		android:layout_weight="1" />
+	<!-- Реклама -->
+	<com.google.ads.AdView ads:adSize="BANNER"
+                           android:layout_width="wrap_content"
+                           android:layout_height="wrap_content"
+                           android:gravity="bottom"
+                           android:id="@+id/adView"
+                           ads:adUnitId="@string/adMob" 
+                           ads:loadAdOnCreate="true"/>
 
 </LinearLayout>

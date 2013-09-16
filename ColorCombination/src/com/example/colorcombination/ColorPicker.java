@@ -254,7 +254,8 @@ public class ColorPicker extends Dialog {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         OnColorChangedListener l = new OnColorChangedListener() {
-            public void colorChanged(int color) {
+            @Override
+			public void colorChanged(int color) {
                 mListener.colorChanged(color);
                 dismiss();
             }

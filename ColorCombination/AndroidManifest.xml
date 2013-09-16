@@ -19,7 +19,8 @@
         <activity
             android:uiOptions="splitActionBarWhenNarrow"
             android:name=".MainActivity"
-            android:label="@string/title_activity_main" >
+            android:label="@string/title_activity_main" 
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -30,7 +31,8 @@
         
         <activity
             android:name=".SaveActivity"
-            android:label="@string/title_activity_save" >   
+            android:label="@string/title_activity_save" 
+            android:screenOrientation="portrait">   
             <!-- <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.colorcombination.MainActivity" />     -->  
@@ -38,7 +40,8 @@
         
         <activity
             android:name=".LoadActivity"
-            android:label="@string/title_activity_load" >   
+            android:label="@string/title_activity_load" 
+            android:screenOrientation="portrait">   
             <!-- <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.colorcombination.SaveActivity.java" />   -->      
@@ -46,7 +49,8 @@
         
         <activity
             android:name=".ReviewActivity"
-            android:label="@string/title_activity_review" >   
+            android:label="@string/title_activity_review" 
+            android:screenOrientation="portrait">   
             <!-- <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.colorcombination.SaveActivity.java" />   -->      

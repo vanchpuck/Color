@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -13,7 +12,6 @@ import android.view.ContextMenu.ContextMenuInfo;
 import android.widget.AdapterView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 
@@ -32,23 +30,23 @@ public class LoadActivity extends Activity{
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.load_activity);
-		Log.w("LOAD", "1");
+
 		store = new SaveStore(this);
 		store.openToRead();
-		Log.w("LOAD", "2");
+
 		cursor = store.getSaveList();
-		Log.w("LOAD", "3");
+
 		startManagingCursor(cursor);
-		Log.w("LOAD", "4");
+
 		// формируем столбцы сопоставления
 		String[] from = new String[] { StoreSQLiteHelper.TabTitle.COL_NAME, StoreSQLiteHelper.TabTitle.COL_CREATE_DATE};
 		int[] to = new int[] { R.id.item_name, R.id.item_date};
-		Log.w("LOAD", "5");
+
 		adapter = new SimpleCursorAdapter(this, R.layout.list_item, cursor, from, to);
-		Log.w("LOAD", "6");
+
 		saveList = (ListView) findViewById(R.id.load_list);
 		saveList.setAdapter(adapter);
-		Log.w("LOAD", "7");
+
 		registerForContextMenu(saveList);
 		
 		saveList.setOnItemClickListener(new OnItemClickListener() {
@@ -57,7 +55,7 @@ public class LoadActivity extends Activity{
 				load(id);
 			}
 		});
-		Log.w("LOAD", "8");
+
 	}
 	
 	@Override
@@ -98,7 +96,6 @@ public class LoadActivity extends Activity{
 			// получаем из пункта контекстного меню данные по пункту списка 
 			AdapterContextMenuInfo acmi = (AdapterContextMenuInfo) item.getMenuInfo();
 			// извлекаем id записи и удаляем соответствующую запись в БД
-			Log.w("LoadActivity.onContextItemSelected", acmi.id+"");
 			store.delSave(acmi.id);
 			// обновляем курсор
 			cursor.requery();
@@ -124,7 +121,6 @@ public class LoadActivity extends Activity{
 		Intent intent = new Intent();
 		intent.putExtra("id", id);
 		setResult(RESULT_OK, intent);
-		Log.w("NEW LOAD", RESULT_OK+"");
 		finish();
 	}
 	

@@ -1,22 +1,12 @@
 package com.example.colorcombination;
 
-import java.io.ObjectOutputStream.PutField;
-import java.util.ArrayList;
-
-
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Color;
-import android.util.Log;
-import android.view.DragEvent;
+//import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
-import android.widget.LinearLayout;
-import android.support.v4.app.NavUtils;
 
 public class MainActivity extends Activity {
 
@@ -30,7 +20,6 @@ public class MainActivity extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.w("CREATE", "CREATE#####");
         setContentView(R.layout.activity_main);
         store = new SaveStore(this);
         
@@ -47,14 +36,14 @@ public class MainActivity extends Activity {
     @Override
     protected void onSaveInstanceState(Bundle outState) {
     	super.onSaveInstanceState(outState);
-    	Log.w("onSave", "SAVE");
+//    	Log.w("onSave", "SAVE");
     	outState.putParcelableArray(getPackageName()+".basics", colors.getBlockBasics());
     }
     
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
     	super.onRestoreInstanceState(savedInstanceState);
-    	Log.w("onRestore", "RESTORE");
+//    	Log.w("onRestore", "RESTORE");
     	Parcelable[] basics = savedInstanceState.getParcelableArray(getPackageName()+".basics");
     	
     	ColorCombinationView.BlockBasic bBasic = null;
@@ -111,13 +100,13 @@ public class MainActivity extends Activity {
     }
     
     protected void saveColors(){
-    	Log.w("SAVE", "SAVE BEGIN");
+//    	Log.w("SAVE", "SAVE BEGIN");
 		Intent intent = new Intent(this, SaveActivity.class);
 		startActivityForResult(intent, REQUEST_CODE_SAVE);
 	}
     
     protected void loadColors(){
-    	Log.w("LOAD", "LOAD BEGIN");
+//    	Log.w("LOAD", "LOAD BEGIN");
 		Intent intent = new Intent(this, LoadActivity.class);
 		startActivityForResult(intent, REQUEST_CODE_LOAD);
 	}
@@ -128,7 +117,6 @@ public class MainActivity extends Activity {
 		if(resultCode == RESULT_OK){
 			// id выбранной в списке записи
 			long id = data.getLongExtra("id", -1);
-			Log.w("SAVE ON RESULT", "id="+id);
 			switch(requestCode){
 				case REQUEST_CODE_SAVE :
 					store.openToWrite();
@@ -140,7 +128,6 @@ public class MainActivity extends Activity {
 					store.close();
 					break;
 				case REQUEST_CODE_LOAD : 
-					Log.w("LOAD_RESULT", data.getLongExtra("id", -1)+"");
 					store.openToRead();
 					store.load(id, colors);
 					store.close();

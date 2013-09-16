@@ -1,14 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout 
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:ads="http://schemas.android.com/apk/lib/com.google.ads"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
 	android:orientation="vertical"
 	android:background="@color/background" >
 	
-	<ListView
-		android:id="@+id/load_list"
-		android:layout_width="match_parent"
-		android:layout_height="match_parent" />
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	    xmlns:tools="http://schemas.android.com/tools"
+	    android:orientation="vertical"
+	    android:layout_width="match_parent"
+	    android:layout_height="0dp"
+	    android:layout_weight="1" 
+	    android:background="@color/background">
+    
+		<ListView
+			android:id="@+id/load_list"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent" />
+	
+	</LinearLayout>
+	
+	<!-- Реклама -->
+	<com.google.ads.AdView ads:adSize="BANNER"
+                           android:layout_width="wrap_content"
+                           android:layout_height="wrap_content"
+                           android:gravity="bottom"
+                           android:id="@+id/adView"
+                           ads:adUnitId="@string/adMob" 
+                           ads:loadAdOnCreate="true"/>
 
 </LinearLayout>

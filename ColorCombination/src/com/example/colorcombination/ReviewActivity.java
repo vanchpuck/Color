@@ -2,16 +2,9 @@ package com.example.colorcombination;
 
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.Color;
-import android.opengl.Visibility;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Parcel;
 import android.os.Parcelable;
-import android.util.Log;
 import android.view.View;
-import android.view.ViewTreeObserver;
-import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 
@@ -32,7 +25,7 @@ public class ReviewActivity extends Activity {
 		}
 				
 		public void setHeight(int height){
-			this.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT, height));
+			this.setLayoutParams(new LinearLayout.LayoutParams(android.view.ViewGroup.LayoutParams.FILL_PARENT, height));
 		}
 		
 	}
@@ -42,7 +35,7 @@ public class ReviewActivity extends Activity {
 		public ReviewPane(Context context) {
 			super(context);
 			this.setOrientation(VERTICAL);
-			this.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
+			this.setLayoutParams(new LayoutParams(android.view.ViewGroup.LayoutParams.FILL_PARENT, android.view.ViewGroup.LayoutParams.FILL_PARENT));
 		}
 		
 		@Override
