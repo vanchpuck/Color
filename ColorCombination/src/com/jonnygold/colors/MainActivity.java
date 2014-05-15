@@ -2,6 +2,8 @@ package com.jonnygold.colors;
 
 import com.jonnygold.colors.R;
 
+import de.devmil.common.ui.color.ColorSelectorDialog;
+
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.app.Activity;
@@ -74,7 +76,8 @@ public class MainActivity extends Activity {
 		// Handle presses on the action bar items
 		switch (item.getItemId()) {
 			case R.id.add_color:
-				new ColorPicker(MainActivity.this, colors, getResources().getColor(R.color.background)).show();
+//				new ColorPicker(MainActivity.this, colors, getResources().getColor(R.color.background)).show();
+				new ColorSelectorDialog(this, colors, getResources().getColor(R.color.background)).show();
 				return true;
 			case R.id.clear:
 				colors.removeAllColors();

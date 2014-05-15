@@ -2,6 +2,8 @@ package com.jonnygold.colors;
 
 import com.jonnygold.colors.R;
 
+import de.devmil.common.ui.color.ColorSelectorDialog;
+
 import android.content.Context;
 import android.graphics.Paint;
 import android.graphics.drawable.ColorDrawable;
@@ -18,7 +20,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-public class ColorCombinationView extends LinearLayout implements ColorPicker.OnColorChangedListener{
+public class ColorCombinationView extends LinearLayout implements ColorSelectorDialog.OnColorChangedListener{
 
 	private int duration = getResources().getInteger(android.R.integer.config_shortAnimTime);
 	
@@ -364,7 +366,7 @@ public class ColorCombinationView extends LinearLayout implements ColorPicker.On
 	}
 	
 
-	public class ColorBlock extends View implements ColorPicker.OnColorChangedListener{
+	public class ColorBlock extends View implements ColorSelectorDialog.OnColorChangedListener{
 		
 		private int height;
 		
@@ -375,7 +377,8 @@ public class ColorCombinationView extends LinearLayout implements ColorPicker.On
 			}
 			@Override
 			public void onClick(View v) {
-				new ColorPicker(getContext(), ColorBlock.this, initColor).show();
+//				new ColorPicker(getContext(), ColorBlock.this, initColor).show();
+				new ColorSelectorDialog(getContext(), ColorBlock.this, initColor).show();
 			}
 			public void setInitColor(int color){
 				initColor = color;
