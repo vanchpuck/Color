@@ -25,12 +25,12 @@ import android.widget.LinearLayout;
 
 public class HsvSelectorView extends LinearLayout {
 
-	private HsvAlphaSelectorView alphaSelector;
+	// private HsvAlphaSelectorView alphaSelector;
 	private HsvHueSelectorView hueSelector;
 	private HsvColorValueView hsvColorValueView;
-	
+
 	private int color;
-	
+
 	private OnColorChangedListener listener;
 
 	public HsvSelectorView(Context context) {
@@ -54,82 +54,83 @@ public class HsvSelectorView extends LinearLayout {
 		this.addView(hsvView, new LayoutParams(LayoutParams.FILL_PARENT,
 				LayoutParams.FILL_PARENT));
 
-		alphaSelector = (HsvAlphaSelectorView) hsvView
-				.findViewById(R.id.color_hsv_alpha);
+		// alphaSelector = (HsvAlphaSelectorView) hsvView
+		// .findViewById(R.id.color_hsv_alpha);
 		hsvColorValueView = (HsvColorValueView) hsvView
 				.findViewById(R.id.color_hsv_value);
-		hueSelector = (HsvHueSelectorView) hsvView.findViewById(R.id.color_hsv_hue);
-		
-		alphaSelector.setOnAlphaChangedListener(new HsvAlphaSelectorView.OnAlphaChangedListener() {
-			@Override
-			public void alphaChanged(HsvAlphaSelectorView sender, int alpha) {
-				internalSetColor(getCurrentColor(true), true);
-			}
-		});
-		
-		hsvColorValueView.setOnSaturationOrValueChanged(new HsvColorValueView.OnSaturationOrValueChanged() {
-			@Override
-			public void saturationOrValueChanged(HsvColorValueView sender,
-					float saturation, float value, boolean up) {
-				alphaSelector.setColor(getCurrentColor(false));
-				internalSetColor(getCurrentColor(true), up);
-			}
-		});
-		hueSelector.setOnHueChangedListener(new HsvHueSelectorView.OnHueChangedListener() {
-			@Override
-			public void hueChanged(HsvHueSelectorView sender, float hue) {
-				hsvColorValueView.setHue(hue);
-				alphaSelector.setColor(getCurrentColor(false));
-				internalSetColor(getCurrentColor(true), true);
-			}
-		});
+		hueSelector = (HsvHueSelectorView) hsvView
+				.findViewById(R.id.color_hsv_hue);
+
+		// alphaSelector.setOnAlphaChangedListener(new
+		// HsvAlphaSelectorView.OnAlphaChangedListener() {
+		// @Override
+		// public void alphaChanged(HsvAlphaSelectorView sender, int alpha) {
+		// internalSetColor(getCurrentColor(true), true);
+		// }
+		// });
+
+		hsvColorValueView
+				.setOnSaturationOrValueChanged(new HsvColorValueView.OnSaturationOrValueChanged() {
+					@Override
+					public void saturationOrValueChanged(
+							HsvColorValueView sender, float saturation,
+							float value, boolean up) {
+						// alphaSelector.setColor(getCurrentColor(false));
+						internalSetColor(getCurrentColor(true), up);
+					}
+				});
+		hueSelector
+				.setOnHueChangedListener(new HsvHueSelectorView.OnHueChangedListener() {
+					@Override
+					public void hueChanged(HsvHueSelectorView sender, float hue) {
+						hsvColorValueView.setHue(hue);
+						// alphaSelector.setColor(getCurrentColor(false));
+						internalSetColor(getCurrentColor(true), true);
+					}
+				});
 		setColor(Color.BLACK);
 	}
-	
-	private int getCurrentColor(boolean includeAlpha)
-	{
+
+	private int getCurrentColor(boolean includeAlpha) {
 		float[] hsv = new float[3];
 		hsv[0] = hueSelector.getHue();
 		hsv[1] = hsvColorValueView.getSaturation();
 		hsv[2] = hsvColorValueView.getValue();
-		int alpha = (int) (includeAlpha ? alphaSelector.getAlpha() : 255);
-		return Color.HSVToColor(alpha, hsv);
+		// int alpha = (int) (includeAlpha ? alphaSelector.getAlpha() : 255);
+		return Color.HSVToColor(hsv);
 	}
-	
+
 	@Override
 	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
 		super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-		LayoutParams paramsAlpha = new LayoutParams(alphaSelector.getLayoutParams());
+		// LayoutParams paramsAlpha = new
+		// LayoutParams(alphaSelector.getLayoutParams());
 		LayoutParams paramsHue = new LayoutParams(hueSelector.getLayoutParams());
-		
-		paramsAlpha.height = hsvColorValueView.getHeight();
+
+		// paramsAlpha.height = hsvColorValueView.getHeight();
 		paramsHue.height = hsvColorValueView.getHeight();
 
-		hueSelector.setMinContentOffset(hsvColorValueView.getBackgroundOffset());
-		alphaSelector.setMinContentOffset(hsvColorValueView.getBackgroundOffset());
-		
-		alphaSelector.setLayoutParams(paramsAlpha);
+		hueSelector
+				.setMinContentOffset(hsvColorValueView.getBackgroundOffset());
+		// alphaSelector.setMinContentOffset(hsvColorValueView.getBackgroundOffset());
+
+		// alphaSelector.setLayoutParams(paramsAlpha);
 		hueSelector.setLayoutParams(paramsHue);
 
 		super.onMeasure(widthMeasureSpec, heightMeasureSpec);
 	}
-	
-	public int getColor()
-	{
+
+	public int getColor() {
 		return color;
 	}
 
-	private void internalSetColor(int color, boolean fire)
-	{
+	private void internalSetColor(int color, boolean fire) {
 		this.color = color;
-		if(fire)
-			onColorChanged();		
+		if (fire)
+			onColorChanged();
 	}
-	
-	public void setColor(int color)
-	{
-		int alpha = Color.alpha(color);
-		alphaSelector.setAlpha(alpha);
+
+	public void setColor(int color) {
 		int colorWithoutAlpha = color | 0xFF000000;
 		float[] hsv = new float[3];
 		Color.colorToHSV(colorWithoutAlpha, hsv);
@@ -137,23 +138,19 @@ public class HsvSelectorView extends LinearLayout {
 		hsvColorValueView.setHue(hsv[0]);
 		hsvColorValueView.setSaturation(hsv[1]);
 		hsvColorValueView.setValue(hsv[2]);
-		alphaSelector.setColor(color);
-		internalSetColor(color, this.color != color);	
+		internalSetColor(color, this.color != color);
 	}
-	
-	private void onColorChanged()
-	{
-		if(listener != null)
+
+	private void onColorChanged() {
+		if (listener != null)
 			listener.colorChanged(color);
 	}
-	
-	public void setOnColorChangedListener(OnColorChangedListener listener)
-	{
+
+	public void setOnColorChangedListener(OnColorChangedListener listener) {
 		this.listener = listener;
 	}
-	
-	public interface OnColorChangedListener
-	{
+
+	public interface OnColorChangedListener {
 		public void colorChanged(int color);
 	}
 }
