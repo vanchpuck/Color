@@ -24,10 +24,16 @@ public class EntryActivity extends Activity {
 		startActivityForResult(intent, 0);
 	}
 	
+	public void getTest(View view) {
+		Intent intent = new Intent(this, ImageActivity.class);
+		intent.putExtra("imageId", R.drawable.rus);
+		startActivity(intent);
+	}
+	
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		Intent intent = new Intent(this, ImageActivity.class);
 		startActivity(intent);
 	}
-	
+		
 }

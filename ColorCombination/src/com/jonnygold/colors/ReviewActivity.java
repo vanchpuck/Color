@@ -6,15 +6,14 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.view.View;
 import android.widget.LinearLayout;
-import android.widget.LinearLayout.LayoutParams;
 
 public class ReviewActivity extends Activity {
 
-	private class ColorBlock extends View{
+	private static class ColorBlock extends View{
 
 		private float height;
 		
-		public ColorBlock(Context context, ColorCombinationView.BlockBasic bBasic) {
+		public ColorBlock(Context context, BlockBasic bBasic) {
 			super(context);
 			this.height = bBasic.getHeight();
 			setBackgroundColor(bBasic.getColor());
@@ -30,7 +29,7 @@ public class ReviewActivity extends Activity {
 		
 	}
 	
-	private class ReviewPane extends LinearLayout{
+	private static class ReviewPane extends LinearLayout{
 
 		public ReviewPane(Context context) {
 			super(context);
@@ -40,7 +39,6 @@ public class ReviewActivity extends Activity {
 		
 		@Override
 		protected void onSizeChanged(int w, int h, int oldw, int oldh) {
-			// TODO Auto-generated method stub
 			super.onSizeChanged(w, h, oldw, oldh);
 			ColorBlock block;
 			for(int i=0; i<getChildCount(); i++){
@@ -63,9 +61,9 @@ public class ReviewActivity extends Activity {
 
 		Parcelable[] basics = getIntent().getExtras().getParcelableArray(getPackageName()+".basics");
 
-		ColorCombinationView.BlockBasic bBasic = null;
+		BlockBasic bBasic = null;
 		for(Parcelable p : basics){
-			bBasic = (ColorCombinationView.BlockBasic)p;
+			bBasic = (BlockBasic)p;
 //			Log.w("COLOR^", bBasic.getColor()+"");
 			rPane.addView(new ColorBlock(this, bBasic));
 		}
@@ -80,13 +78,11 @@ public class ReviewActivity extends Activity {
 	
 	@Override
 	protected void onStop() {
-		// TODO Auto-generated method stub
 		super.onStop();
 	}
 	
 	@Override
 	protected void onDestroy() {
-		// TODO Auto-generated method stub
 		super.onDestroy();
 	}
 	

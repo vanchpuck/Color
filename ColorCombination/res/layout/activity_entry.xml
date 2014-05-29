@@ -25,5 +25,12 @@
 	    android:layout_gravity="center_vertical"
 	    android:text="Камера"
 	    android:onClick="getFromCamera"/>
+    
+    <Button
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:layout_gravity="center_vertical"
+	    android:text="Тест"
+	    android:onClick="getTest"/>
 	
 </LinearLayout>

@@ -250,11 +250,11 @@ public class ColorCombinationView extends LinearLayout implements ColorSelectorD
 			ColorBlock cBlock = null;;
 			if(color.getHeight() == 0){
 //				Log.w("0","0");
-				// Вычислим высоту нового блока		
+				// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ		
 				newHeight = this.getHeight()/(childCount+1);
 				color.setHeight(newHeight);
 				
-				// Пройдёмся по всем блокам и изменим размеры
+				// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 				for(int i=0; i<childCount; i++){	
 					cBlock = (ColorBlock)this.getChildAt(i);
 					cBlock.setHeight(cBlock.getActualHeight() - newHeight/(childCount));
@@ -264,7 +264,7 @@ public class ColorCombinationView extends LinearLayout implements ColorSelectorD
 			
 			
 			
-			// Добавляем блок
+			// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ
 			super.addView(color);
 		}
 		
@@ -430,7 +430,7 @@ public class ColorCombinationView extends LinearLayout implements ColorSelectorD
 						case DragEvent.ACTION_DROP:
 							idx = ((LinearLayout)v.getParent()).indexOfChild(v);
 													
-							// Вроде как получаем вьюшку, которую перетаскиваем
+							// пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 							View view = (View) event.getLocalState();
 							ColorsPane owner = (ColorsPane) view.getParent();
 							
@@ -538,61 +538,61 @@ public class ColorCombinationView extends LinearLayout implements ColorSelectorD
 		
 	}
 		
-	public final static class BlockBasic implements Parcelable{
-
-		private int color;
-		private float height;
-		private int actHeight;
-		
-		public BlockBasic(int color, float height, int actHeight){
-			this.color = color;
-			this.height = height;
-			this.actHeight = actHeight;
-		}
-		
-		public BlockBasic(Parcel parcel){
-			this.color = parcel.readInt();
-			this.height = parcel.readFloat();
-			this.actHeight = parcel.readInt();
-		}
-		
-		public final static Parcelable.Creator<BlockBasic> CREATOR = new Parcelable.Creator<BlockBasic>() {
-		    @Override
-			public BlockBasic createFromParcel(Parcel in) {
-		        return new BlockBasic(in);
-		    }
-		
-		    @Override
-			public BlockBasic[] newArray(int size) {
-		        return new BlockBasic[size];
-		    }
-		};
-		
-		@Override
-		public int describeContents() {
-			return 0;
-		}
-
-		@Override
-		public void writeToParcel(Parcel dest, int flags) {
-			dest.writeInt(color);
-			dest.writeFloat(height);
-			dest.writeInt(actHeight);
-		}
-		
-		public int getColor(){
-			return this.color;
-		}
-		
-		public float getHeight(){
-			return this.height;
-		}
-		
-		public int getActHeight(){
-			return this.actHeight;
-		}
-		
-	}
+//	public final static class BlockBasic implements Parcelable{
+//
+//		private int color;
+//		private float height;
+//		private int actHeight;
+//		
+//		public BlockBasic(int color, float height, int actHeight){
+//			this.color = color;
+//			this.height = height;
+//			this.actHeight = actHeight;
+//		}
+//		
+//		public BlockBasic(Parcel parcel){
+//			this.color = parcel.readInt();
+//			this.height = parcel.readFloat();
+//			this.actHeight = parcel.readInt();
+//		}
+//		
+//		public final static Parcelable.Creator<BlockBasic> CREATOR = new Parcelable.Creator<BlockBasic>() {
+//		    @Override
+//			public BlockBasic createFromParcel(Parcel in) {
+//		        return new BlockBasic(in);
+//		    }
+//		
+//		    @Override
+//			public BlockBasic[] newArray(int size) {
+//		        return new BlockBasic[size];
+//		    }
+//		};
+//		
+//		@Override
+//		public int describeContents() {
+//			return 0;
+//		}
+//
+//		@Override
+//		public void writeToParcel(Parcel dest, int flags) {
+//			dest.writeInt(color);
+//			dest.writeFloat(height);
+//			dest.writeInt(actHeight);
+//		}
+//		
+//		public int getColor(){
+//			return this.color;
+//		}
+//		
+//		public float getHeight(){
+//			return this.height;
+//		}
+//		
+//		public int getActHeight(){
+//			return this.actHeight;
+//		}
+//		
+//	}
 	
 	
 //	private LinearLayout leftResizersPane;

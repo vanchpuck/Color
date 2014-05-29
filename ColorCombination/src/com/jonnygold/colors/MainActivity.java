@@ -50,9 +50,9 @@ public class MainActivity extends Activity {
 //    	Log.w("onRestore", "RESTORE");
     	Parcelable[] basics = savedInstanceState.getParcelableArray(getPackageName()+".basics");
     	
-    	ColorCombinationView.BlockBasic bBasic = null;
+    	BlockBasic bBasic = null;
     	for(int i=0; i<basics.length; i++){
-    		bBasic = (ColorCombinationView.BlockBasic) basics[i];
+    		bBasic = (BlockBasic) basics[i];
     		colors.addColor(bBasic.getColor());
     		colors.getColorBlock(i).setHeight(bBasic.getActHeight());
     	}
@@ -120,7 +120,7 @@ public class MainActivity extends Activity {
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
 		if(resultCode == RESULT_OK){
-			// id выбранной в списке записи
+			// id пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
 			long id = data.getLongExtra("id", -1);
 			switch(requestCode){
 				case REQUEST_CODE_SAVE :
