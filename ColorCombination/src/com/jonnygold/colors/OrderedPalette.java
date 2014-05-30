@@ -25,7 +25,13 @@ public class OrderedPalette implements IsPalette {
 	
 	public OrderedPalette(Collection<BlockBasic> colors, Comparator<BlockBasic> comparator, int bound) {		
 		if(colors == null){
-			throw new IllegalArgumentException("Colors collections is not initialized");
+			throw new IllegalArgumentException("Colors collection is not initialized.");
+		}
+		if(comparator == null){
+			throw new IllegalArgumentException("Comparator is not initialized.");
+		}
+		if(bound <= 0){
+			throw new IllegalArgumentException("Illegal bound value (should be > 0).");
 		}
 		
 		this.colors = new TreeSet<BlockBasic>(comparator);
@@ -38,6 +44,9 @@ public class OrderedPalette implements IsPalette {
 				}
 				this.colors.add(iter.next());
 			}
+		} 
+		else {
+			this.colors.addAll(colors);
 		}
 	}
 	

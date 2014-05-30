@@ -10,10 +10,13 @@ public class Palette implements IsPalette {
 	
 	public Palette(Collection<BlockBasic> colors, int bound) {		
 		if(colors == null){
-			throw new IllegalArgumentException("Colors collections is not initialized");
+			throw new IllegalArgumentException("Colors collection is not initialized.");
+		}
+		if(bound <= 0){
+			throw new IllegalArgumentException("Illegal bound value (should be > 0).");
 		}
 		
-		this.colors = new ArrayList<BlockBasic>(colors);
+		this.colors = new ArrayList<BlockBasic>(bound);
 		
 		if(colors.size() > bound){
 			int counter = 0;
@@ -23,6 +26,9 @@ public class Palette implements IsPalette {
 				}
 				this.colors.add(iter.next());
 			}
+		}
+		else {
+			this.colors.addAll(colors);
 		}
 	}
 	
