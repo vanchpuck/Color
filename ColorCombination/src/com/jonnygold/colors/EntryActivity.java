@@ -2,7 +2,12 @@ package com.jonnygold.colors;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore.MediaColumns;
 import android.view.View;
 
 public class EntryActivity extends Activity {
@@ -33,7 +38,28 @@ public class EntryActivity extends Activity {
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		Intent intent = new Intent(this, ImageActivity.class);
-		startActivity(intent);
+		if (resultCode == RESULT_OK) {
+			Uri selectedImageUri = data.getData();
+//			 
+//			String tempPath = getPath(selectedImageUri);
+//			Bitmap bm;
+//			BitmapFactory.Options btmapOptions = new BitmapFactory.Options();
+//			
+//			bm = BitmapFactory.decodeFile(tempPath, btmapOptions);
+			
+			intent.putExtra("uri", selectedImageUri);
+//			intent.putExtra("image", "dddsf");
+			startActivity(intent);
+        }
 	}
+	
+	public String getPath(Uri uri) {
+        String[] projection = { MediaColumns.DATA };
+        Cursor cursor = this
+                .managedQuery(uri, projection, null, null, null);
+        int column_index = cursor.getColumnIndexOrThrow(MediaColumns.DATA);
+        cursor.moveToFirst();
+        return cursor.getString(column_index);
+    }
 		
 }

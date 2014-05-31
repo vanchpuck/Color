@@ -1,5 +1,7 @@
 package com.jonnygold.quantizer;
 
+import android.graphics.Color;
+
 public final class RGBColor implements IsRGBColor {
 
 	private final int red;
@@ -29,6 +31,14 @@ public final class RGBColor implements IsRGBColor {
 	@Override
 	public String toString() {
 		return "RGBColor {R:"+getRed()+" G:"+getGreen()+" B:"+getBlue()+"}";
+	}
+	
+	public int getIntColor() {
+		return Color.rgb(getRed(), getGreen(), getBlue());
+//		return ((255 & 0xFF) << 24) | //alpha
+//	            ((getRed() & 0xFF) << 16) | //red
+//	            ((getGreen() & 0xFF) << 8)  | //green
+//	            ((getBlue() & 0xFF) << 0); //blue
 	}
 	
 	@Override

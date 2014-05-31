@@ -19,6 +19,8 @@ public interface IsHistogram {
 	
 	public int getCount(RGBColor color);
 	
+	public int getTotalCount();
+	
 	public boolean containsColor(RGBColor color);
 	
 	public int size();

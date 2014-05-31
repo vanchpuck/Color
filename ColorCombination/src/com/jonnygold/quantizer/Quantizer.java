@@ -9,40 +9,22 @@ public class Quantizer {
 
 	private static final Comparator<RGBColor> RED_COMPARATOR = new Comparator<RGBColor>() {
 		@Override
-		public int compare(RGBColor color1, RGBColor color2) {
-			if(color1.getRed() > color2.getRed()) {
-				return 1;
-			} else if(color2.getRed() > color1.getRed()) {
-				return -1;
-			} else {
-				return 0;
-			}
+		public int compare(RGBColor x, RGBColor y) {
+			return (x.getRed() < y.getRed()) ? -1 : ((x.getRed() == y.getRed()) ? 0 : 1);
 		}
 	};
 	
 	private static final Comparator<RGBColor> GREEN_COMPARATOR = new Comparator<RGBColor>() {
 		@Override
-		public int compare(RGBColor color1, RGBColor color2) {
-			if(color1.getGreen() > color2.getGreen()) {
-				return 1;
-			} else if(color2.getGreen() > color1.getGreen()) {
-				return -1;
-			} else {
-				return 0;
-			}
+		public int compare(RGBColor x, RGBColor y) {
+			return (x.getGreen() < y.getGreen()) ? -1 : ((x.getGreen() == y.getGreen()) ? 0 : 1);
 		}
 	};
 	
 	private static final Comparator<RGBColor> BLUE_COMPARATOR = new Comparator<RGBColor>() {
 		@Override
-		public int compare(RGBColor color1, RGBColor color2) {
-			if(color1.getBlue() > color2.getBlue()) {
-				return 1;
-			} else if(color2.getBlue() > color1.getBlue()) {
-				return -1;
-			} else {
-				return 0;
-			}
+		public int compare(RGBColor x, RGBColor y) {
+			return (x.getBlue() < y.getBlue()) ? -1 : ((x.getBlue() == y.getBlue()) ? 0 : 1);
 		}
 	};
 	

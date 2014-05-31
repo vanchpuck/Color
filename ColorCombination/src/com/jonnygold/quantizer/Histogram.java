@@ -137,4 +137,13 @@ public class Histogram implements IsHistogram {
 	public IsBar getBar(RGBColor color) {
 		return data.get(color);
 	}
+
+	@Override
+	public int getTotalCount() {
+		int totalCount = 0;
+		for(IsBar bar : data.values()){
+			totalCount += bar.getCount();
+		}
+		return totalCount;
+	}
 }

@@ -1,5 +1,8 @@
 package com.jonnygold.colors;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
@@ -28,7 +31,7 @@ public class PaletteView extends LinearLayout {
 		
 	}
 	
-	private IsPalette palette;
+	private Collection<BlockBasic> palette;
 	
 	public PaletteView(Context context, AttributeSet attrs, int defStyle) {
 		super(context, attrs, defStyle);
@@ -45,18 +48,16 @@ public class PaletteView extends LinearLayout {
 		this.setOrientation(HORIZONTAL);
 	}
 	
-	public void setPalette(IsPalette palette) {
-		this.palette = palette;
+	public void setPalette(Collection<BlockBasic> palette) {
+		this.palette = new ArrayList<BlockBasic>(palette);
 		updatePalette();
-		@SuppressWarnings("unused")
-		int cc = getChildCount();
 	}
 	
 	public void updatePalette() {
 		if(palette == null) {
 			return;
 		}
-		for(BlockBasic block : palette.getBlocks()) {
+		for(BlockBasic block : palette) {
 			addColorBlock(block);
 		}
 	}

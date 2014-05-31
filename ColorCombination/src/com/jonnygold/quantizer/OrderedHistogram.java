@@ -8,9 +8,21 @@ import java.util.TreeSet;
 
 public class OrderedHistogram implements IsHistogram{
 	
+	private static class DefaultDescComparator implements Comparator<IsBar> {
+
+		@Override
+		public int compare(IsBar x, IsBar y) {
+			return -((x.getCount() < y.getCount()) ? -1 : ((x.getCount() == y.getCount()) ? 0 : 1));
+		}
+	};
+	
 	private IsHistogram histogram;
 	
 	private Comparator<IsBar> comparator;
+	
+	public OrderedHistogram(IsHistogram histogram) {
+		this(histogram, new DefaultDescComparator());
+	}
 	
 	public OrderedHistogram(IsHistogram histogram, Comparator<IsBar> comparator) {
 		this.histogram = histogram;
@@ -54,5 +66,10 @@ public class OrderedHistogram implements IsHistogram{
 	@Override
 	public int size() {
 		return histogram.size();
+	}
+
+	@Override
+	public int getTotalCount() {
+		return histogram.getTotalCount();
 	}
 }
