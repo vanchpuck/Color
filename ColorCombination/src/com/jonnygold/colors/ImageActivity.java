@@ -1,6 +1,7 @@
 package com.jonnygold.colors;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import com.jonnygold.quantizer.Histogram;
@@ -22,9 +23,9 @@ import android.widget.ImageView;
 
 public class ImageActivity extends Activity {
 
-	private static final double DEFAULT_HISTOGRAM_BOUND = 0.0001;
-	private static final int DEFAULT_QUANTIZATION_LEVEL = 3;
-	private static final int DEFAULT_PALETE_BOUND = 5;
+	private static final double DEFAULT_HISTOGRAM_BOUND = 0.0005;
+	private static final int DEFAULT_QUANTIZATION_LEVEL = 5;
+	private static final int DEFAULT_PALETE_BOUND = 6;
 	
 	@Override
     public void onCreate(Bundle savedInstanceState) {
@@ -44,12 +45,14 @@ public class ImageActivity extends Activity {
 		
 		image = Bitmap.createScaledBitmap(image, image.getWidth()/4, image.getHeight()/4, true);
 		
+//		image = BitmapFactory.decodeResource(this.getResources(),
+//                R.drawable.himia);
+		
 		imageView.setImageBitmap(image);
         
 //        Bitmap image = (Bitmap)getIntent().getSerializableExtra("iamge");
 //        
-//        Bitmap image = BitmapFactory.decodeResource(this.getResources(),
-//                R.drawable.himia);
+        
 //        
         Histogram.Builder builder = new Histogram.Builder();
 
@@ -59,14 +62,54 @@ public class ImageActivity extends Activity {
         	builder.addColor(new RGBColor(Color.red(pixel), Color.green(pixel), Color.blue(pixel)));
         }
         
-        IsHistogram histogram = builder.build(DEFAULT_HISTOGRAM_BOUND);
+//        IsHistogram histogram = builder.build(DEFAULT_HISTOGRAM_BOUND);
+        IsHistogram histogram = builder.build();
         
         Quantizer q = new Quantizer();
         IsHistogram palete = new OrderedHistogram(q.quantize(histogram, DEFAULT_QUANTIZATION_LEVEL));
         
+        palete = filter(palete);
+        
         IsHistogramConverter converter = new BoundedHistogramConverter(DEFAULT_PALETE_BOUND);
+//        IsHistogramConverter converter = new HistogramConverter();
         
         paletteView.setPalette(converter.convert(palete));
+	}
+	
+	public IsHistogram filter(IsHistogram palete) {
+		Histogram.Builder builder = new Histogram.Builder();
+		Collection<RGBColor> newCol = new ArrayList<RGBColor>();
+		boolean flag = true;
+		for(RGBColor col1 : palete.getColors()){
+			for(RGBColor col2 : newCol){
+				if(isSimilar(col1, col2)){
+					flag = false;
+					break;
+				}
+			}
+			if(flag){
+				newCol.add(col1);
+				builder.addColor(col1);				
+			}
+			flag = true;
+		}
+		return builder.build();
+	}
+	
+	private boolean isSimilar(RGBColor co1, RGBColor col2) {
+		int r = Math.abs(co1.getRed() - col2.getRed());
+		int g = Math.abs(co1.getGreen() - col2.getGreen());
+		int b = Math.abs(co1.getBlue() - col2.getBlue());
+		if(r > 27){
+			return false;
+		}  
+		if (g > 27){
+			return false;
+		}  
+		if (b > 30){
+			return false;
+		}
+		return true;
 	}
 	
 	public String getPath(Uri uri) {

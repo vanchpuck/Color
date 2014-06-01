@@ -43,12 +43,7 @@ public class Histogram implements IsHistogram {
 		private Map<RGBColor, Bar> builderData = new HashMap<RGBColor, Bar>();
 		
 		public Builder addColor(RGBColor color){
-			if(builderData.containsKey(color)) {
-				builderData.get(color).setCount(builderData.get(color).getCount()+1);
-			} else {
-				builderData.put(color, new Bar(color, 1));
-			}
-			return this;
+			return addColor(color, 1);
 		}
 		
 		public Builder addColor(RGBColor color, int count){

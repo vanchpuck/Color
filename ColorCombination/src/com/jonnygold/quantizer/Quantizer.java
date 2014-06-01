@@ -7,6 +7,12 @@ import java.util.Map;
 
 public class Quantizer {
 
+	private static final int RED = 150;
+	private static final int BLUE = 180;
+	
+//	private static final int RED = 110;
+//	private static final int BLUE = 120;
+	
 	private static final Comparator<RGBColor> RED_COMPARATOR = new Comparator<RGBColor>() {
 		@Override
 		public int compare(RGBColor x, RGBColor y) {
@@ -55,7 +61,7 @@ public class Quantizer {
 		BLUE {
 			@Override
 			public int getQuantizationBound() {
-				return 90;
+				return 70;
 			}
 
 			@Override
@@ -189,7 +195,8 @@ public class Quantizer {
 		}
 		
 		private boolean isDeepEnough(int gulf){
-			return (double)gulf/(double)cubeAxis.length > 0.1;
+			double val = (double)gulf/(double)cubeAxis.length;
+			return val > 0.25;
 		}
 		
 		private int findMedianIdx(){
