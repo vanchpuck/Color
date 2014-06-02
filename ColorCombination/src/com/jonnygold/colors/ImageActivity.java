@@ -9,7 +9,9 @@ import com.jonnygold.quantizer.IsHistogram;
 import com.jonnygold.quantizer.OrderedHistogram;
 import com.jonnygold.quantizer.Quantizer;
 import com.jonnygold.quantizer.RGBColor;
+import com.jonnygold.quantizer.IsHistogram.IsBar;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -19,6 +21,10 @@ import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore.MediaColumns;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 
 public class ImageActivity extends Activity {
@@ -32,21 +38,61 @@ public class ImageActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image);
         
+        
+//		// BEGIN_INCLUDE (inflate_set_custom_view)
+//		// Inflate a "Done/Cancel" custom action bar view.
+//		final LayoutInflater inflater = (LayoutInflater) getActionBar()
+//				.getThemedContext().getSystemService(LAYOUT_INFLATER_SERVICE);
+//		final View customActionBarView = inflater.inflate(
+//				R.layout.actionbar_custom_view_done_cancel, null);
+//		customActionBarView.findViewById(R.id.actionbar_done)
+//				.setOnClickListener(new View.OnClickListener() {
+//					@Override
+//					public void onClick(View v) {
+//						// "Done"
+//						finish();
+//					}
+//				});
+//		customActionBarView.findViewById(R.id.actionbar_cancel)
+//				.setOnClickListener(new View.OnClickListener() {
+//					@Override
+//					public void onClick(View v) {
+//						// "Cancel"
+//						finish();
+//					}
+//				});
+//		// Show the custom action bar view and hide the normal Home icon and
+//		// title.
+//		final ActionBar actionBar = getActionBar();
+//		actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM,
+//				ActionBar.DISPLAY_SHOW_CUSTOM | ActionBar.DISPLAY_SHOW_HOME
+//						| ActionBar.DISPLAY_SHOW_TITLE);
+//		actionBar.setCustomView(customActionBarView,
+//				new ActionBar.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+//						ViewGroup.LayoutParams.MATCH_PARENT));
+//		// END_INCLUDE (inflate_set_custom_view)
+        
+        
+        
         PaletteView paletteView = (PaletteView)findViewById(R.id.view_palette);
         ImageView imageView = (ImageView)findViewById(R.id.view_image);
         
-        Uri selectedImageUri = getIntent().getParcelableExtra("uri");
-		 
-		String tempPath = getPath(selectedImageUri);
-		Bitmap image;
-		BitmapFactory.Options btmapOptions = new BitmapFactory.Options();
+        Bitmap image;
+        
+//        Uri selectedImageUri = getIntent().getParcelableExtra("uri");
+//		 
+//		String tempPath = getPath(selectedImageUri);
+//		
+//		BitmapFactory.Options btmapOptions = new BitmapFactory.Options();
+//		
+//		image = BitmapFactory.decodeFile(tempPath, btmapOptions);
+//		
+//		image = Bitmap.createScaledBitmap(image, image.getWidth()/4, image.getHeight()/4, true);
 		
-		image = BitmapFactory.decodeFile(tempPath, btmapOptions);
+		image = BitmapFactory.decodeResource(this.getResources(),
+                R.drawable.himia);
 		
-		image = Bitmap.createScaledBitmap(image, image.getWidth()/4, image.getHeight()/4, true);
-		
-//		image = BitmapFactory.decodeResource(this.getResources(),
-//                R.drawable.himia);
+		image = Bitmap.createScaledBitmap(image, image.getWidth()/10, image.getHeight()/10, true);
 		
 		imageView.setImageBitmap(image);
         
@@ -80,20 +126,20 @@ public class ImageActivity extends Activity {
 		Histogram.Builder builder = new Histogram.Builder();
 		Collection<RGBColor> newCol = new ArrayList<RGBColor>();
 		boolean flag = true;
-		for(RGBColor col1 : palete.getColors()){
+		for(IsBar col1 : palete.getBars()){
 			for(RGBColor col2 : newCol){
-				if(isSimilar(col1, col2)){
+				if(isSimilar(col1.getColor(), col2)){
 					flag = false;
 					break;
 				}
 			}
 			if(flag){
-				newCol.add(col1);
-				builder.addColor(col1);				
+				newCol.add(col1.getColor());
+				builder.addColor(col1.getColor(), col1.getCount());				
 			}
 			flag = true;
 		}
-		return builder.build();
+		return new OrderedHistogram(builder.build());
 	}
 	
 	private boolean isSimilar(RGBColor co1, RGBColor col2) {
@@ -120,5 +166,11 @@ public class ImageActivity extends Activity {
         cursor.moveToFirst();
         return cursor.getString(column_index);
     }
+	
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		getMenuInflater().inflate(R.menu.activity_image, menu);
+		return super.onCreateOptionsMenu(menu);
+	}
 		
 }

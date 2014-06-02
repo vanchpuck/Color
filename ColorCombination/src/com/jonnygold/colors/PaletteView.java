@@ -66,14 +66,4 @@ public class PaletteView extends LinearLayout {
 		addView(new ColorBlock(getContext(), block));
 	}
 	
-//	@Override
-//	protected void onSizeChanged(int w, int h, int oldw, int oldh) {
-//		super.onSizeChanged(w, h, oldw, oldh);
-//		ColorBlock block;
-//		for(int i=0; i<getChildCount(); i++){
-//			block = ((ColorBlock)this.getChildAt(i));
-//			block.setHeight((int)(h*block.getHeightRate()));
-//		}
-//	}
-
 }
