@@ -1,6 +1,7 @@
 package com.jonnygold.colors;
 
 import java.text.SimpleDateFormat;
+import java.util.Collection;
 import java.util.Date;
 
 import android.content.ContentValues;
@@ -39,11 +40,11 @@ public class SaveStore {
 	}
 	
 	/*
-	*	ОРГАНИЗОВАТЬ ДОБАВЛЕНИЕ ДАТЫ
+	*	пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ
 	*/
 	public void save(String name, ColorCombinationView colors){
 		
-		/* ДОБАВИТЬ ТРАНЗАКЦИЮ */
+		/* пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ */
 	
 		db.beginTransaction();
 		try{
@@ -79,7 +80,7 @@ public class SaveStore {
 	
 	public void save(long id, String name, ColorCombinationView colors){
 		
-		/* ДОБАВИТЬ ТРАНЗАКЦИЮ */
+		/* пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ */
 		db.beginTransaction();
 		try{
 			ContentValues values = new ContentValues();
@@ -112,6 +113,55 @@ public class SaveStore {
 		}
 	}
 	
+	public void saveNew(long id, String name, BlockBasic[] colors) throws SQLException {
+		db.beginTransaction();
+		try{
+			ContentValues values = new ContentValues();
+			values.put(StoreSQLiteHelper.TabTitle.COL_NAME, name);
+			values.put(StoreSQLiteHelper.TabTitle.COL_CREATE_DATE, dateFormat.format(new Date()));
+
+			db.delete(StoreSQLiteHelper.TabContent.NAME, StoreSQLiteHelper.TabContent.COL_TITLE_ID+"="+id, null);
+			
+			for(BlockBasic block : colors){
+				values.clear();
+				values.put(StoreSQLiteHelper.TabContent.COL_TITLE_ID, id);
+				values.put(StoreSQLiteHelper.TabContent.COL_COLOR, block.getColor());
+				values.put(StoreSQLiteHelper.TabContent.COL_SIZE, block.getHeight());
+				db.insertOrThrow(StoreSQLiteHelper.TabContent.NAME, null, values);
+			}
+			db.setTransactionSuccessful();
+		}
+		catch(android.database.sqlite.SQLiteException exc){
+			exc.printStackTrace();
+		}
+		finally{
+			db.endTransaction();
+		}
+	}
+	
+	public void saveNew(String name, BlockBasic[] colors) throws SQLException {		
+		db.beginTransaction();
+		try{
+			ContentValues values = new ContentValues();
+			values.put(StoreSQLiteHelper.TabTitle.COL_NAME, name);
+			values.put(StoreSQLiteHelper.TabTitle.COL_CREATE_DATE, dateFormat.format(new Date()));
+			long insertId = db.insertOrThrow(StoreSQLiteHelper.TabTitle.NAME, null, values);
+
+			for(BlockBasic block : colors){
+				values.clear();
+				values.put(StoreSQLiteHelper.TabContent.COL_TITLE_ID, insertId);
+				values.put(StoreSQLiteHelper.TabContent.COL_COLOR, block.getColor());
+				
+				values.put(StoreSQLiteHelper.TabContent.COL_SIZE, block.getHeight());
+				db.insertOrThrow(StoreSQLiteHelper.TabContent.NAME, null, values);
+			}
+			db.setTransactionSuccessful();
+		}
+		finally{
+			db.endTransaction();
+		}
+	}
+	
 	public void load(long id, ColorCombinationView container){
 		
 		Log.w("LOAD", "BEGIN!!!");
@@ -128,15 +178,15 @@ public class SaveStore {
 				null
 		);
 
-		// Добавляем цветовые панели
+		// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
 		cursor.moveToFirst();
 		while(!cursor.isAfterLast()){
 			Log.w("COLOR", cursor.getInt(0)+"");
-			container.addColor(cursor.getInt(0/*ПОДОБРАТЬ НОМЕР СТОЛБЦА*/));
+			container.addColor(cursor.getInt(0/*пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ*/));
 			cursor.moveToNext();
 		}
 
-		// Устанавливаем нужный размер цветовых панелей
+		// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 		cursor.moveToFirst();
 		for(int i=0; !cursor.isAfterLast(); i++){
 			Log.w("HEIGHT", cursor.getFloat(1)+"");

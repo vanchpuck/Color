@@ -52,6 +52,12 @@ public class PaletteView extends LinearLayout {
 		this.palette = new ArrayList<BlockBasic>(palette);
 		updatePalette();
 	}
+		
+	public BlockBasic[] getPalette() {
+		BlockBasic[] blocks = new BlockBasic[palette.size()];
+		palette.toArray(blocks);
+		return blocks;
+	}
 	
 	public void updatePalette() {
 		if(palette == null) {

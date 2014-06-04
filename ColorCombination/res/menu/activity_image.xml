@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    
+    <item android:id="@+id/save_palete"
+        android:title="@string/menu_expand"
+        android:icon="@drawable/content_save"
+        android:showAsAction="ifRoom"
+        android:titleCondensed="save" />
+    
+    <item android:id="@+id/edit_palete"
+        android:title="@string/menu_add_color"
+        android:icon="@drawable/content_discard"
+        android:showAsAction="ifRoom"
+        android:titleCondensed="edit" />
+    
+    <item android:id="@+id/share_palete"
+        android:title="@string/menu_share"
+        android:icon="@drawable/av_full_screen"
+        android:showAsAction="ifRoom"
+        android:titleCondensed="share" />
+    
+</menu>

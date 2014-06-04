@@ -268,6 +268,32 @@ public class ColorCombinationView extends LinearLayout implements ColorSelectorD
 			super.addView(color);
 		}
 		
+		public void addColor(ColorBlock color, int height){
+			
+			int childCount = getChildCount();
+			
+			int newHeight = 0;
+			ColorBlock cBlock = null;;
+			if(color.getHeight() == 0){
+//				Log.w("0","0");
+				// �������� ������ ������ �����		
+				newHeight = this.getHeight()/(childCount+1);
+				color.setHeight(height);
+				
+//				// �������� �� ���� ������ � ������� �������
+//				for(int i=0; i<childCount; i++){	
+//					cBlock = (ColorBlock)this.getChildAt(i);
+//					cBlock.setHeight(cBlock.getActualHeight() - newHeight/(childCount));
+////					cBlock.setHeight(cBlock.getHeight() - cBlock.getHeight()/this.getHeight()*newHeight);
+//				}
+			}
+			
+			
+			
+			// ��������� ����
+			super.addView(color);
+		}
+		
 		public void removeColor(int idx){
 			ColorBlock block = (ColorBlock) this.getChildAt(idx);
 			
@@ -581,6 +607,16 @@ public class ColorCombinationView extends LinearLayout implements ColorSelectorD
 		if(colorsPane.getChildCount() < 5){
 			resController.addPair();
 			colorsPane.addColor(new ColorBlock(getContext(), color));
+		}
+		else{
+			Toast.makeText(getContext(), getResources().getString(R.string.max_color_count), Toast.LENGTH_LONG).show();
+		}		
+	}
+	
+	public void addColor(int color, int height){
+		if(colorsPane.getChildCount() < 5){
+			resController.addPair();
+			colorsPane.addColor(new ColorBlock(getContext(), color), height);
 		}
 		else{
 			Toast.makeText(getContext(), getResources().getString(R.string.max_color_count), Toast.LENGTH_LONG).show();

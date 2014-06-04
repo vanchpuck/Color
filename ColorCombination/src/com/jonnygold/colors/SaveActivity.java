@@ -26,6 +26,8 @@ import android.widget.SimpleCursorAdapter;
 
 public class SaveActivity extends Activity{
 	
+	public static final int REQUEST_CODE_SAVE = 0;
+	
 	protected final static int CM_DELETE_ID = 1;
 	
 	private SaveStore store;
@@ -82,7 +84,7 @@ public class SaveActivity extends Activity{
 		
 		startManagingCursor(cursor);
 		
-		// формируем столбцы сопоставления
+		// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 		String[] from = new String[] { StoreSQLiteHelper.TabTitle.COL_NAME, StoreSQLiteHelper.TabTitle.COL_CREATE_DATE};
 		int[] to = new int[] { R.id.item_name, R.id.item_date};
 		
@@ -131,11 +133,11 @@ public class SaveActivity extends Activity{
 	@Override
 	public boolean onContextItemSelected(MenuItem item) {
 		if (item.getItemId() == CM_DELETE_ID) {
-			// получаем из пункта контекстного меню данные по пункту списка 
+			// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ 
 			AdapterContextMenuInfo acmi = (AdapterContextMenuInfo) item.getMenuInfo();
-			// извлекаем id записи и удаляем соответствующую запись в БД
+			// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ id пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅ
 			store.delSave(acmi.id);
-			// обновляем курсор
+			// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
 			cursor.requery();
 			return true;
 		}

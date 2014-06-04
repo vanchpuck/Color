@@ -3,11 +3,12 @@ package com.jonnygold.colors;
 import com.jonnygold.colors.R;
 
 import de.devmil.common.ui.color.ColorSelectorDialog;
-
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Intent;
+import android.database.SQLException;
 //import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -60,8 +61,50 @@ public class MainActivity extends Activity {
     }
     
     @Override
+    protected void onStart() {
+    	super.onStart();
+    	
+//    	Parcelable[] basics = getIntent().getExtras().getParcelableArray("blocks");
+//
+//    	if(basics == null) {
+//    		return;
+//    	}
+//    	
+//		BlockBasic bBasic = null;
+//		for(int i=0; i<basics.length; i++){
+//			bBasic = (BlockBasic) basics[i];
+//			colors.addColor(bBasic.getColor());
+//			int h = colors.getHeight();
+//    		colors.getColorBlock(i).setHeight((int) (colors.getHeight() * bBasic.getHeight()) );
+//		}
+    }
+    
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+    	super.onWindowFocusChanged(hasFocus);
+    	
+    	Parcelable[] basics = getIntent().getExtras().getParcelableArray("blocks");
+
+    	if(basics == null) {
+    		return;
+    	}
+    	int h = colors.getHeight();
+		BlockBasic bBasic = null;
+		for(int i=0; i<basics.length; i++){
+			bBasic = (BlockBasic) basics[i];
+			
+			float hm = h * 0.2f;
+			
+			colors.addColor(bBasic.getColor());
+			
+			
+			
+//    		colors.getColorBlock(i).setHeight((int) (h * 0.2) );
+		}
+    }
+    
+    @Override
     protected void onPostCreate(Bundle savedInstanceState) {
-    	// TODO Auto-generated method stub
     	super.onPostCreate(savedInstanceState);
     }
     
@@ -126,10 +169,17 @@ public class MainActivity extends Activity {
 				case REQUEST_CODE_SAVE :
 					store.openToWrite();
 					String name = data.getExtras().getString("name");
+					try {
 					if(id == -1)
-						store.save(name, colors);
+						store.saveNew(name, colors.getBlockBasics());
 					else
-						store.save(id, name, colors);
+						store.saveNew(id, name, colors.getBlockBasics());
+					} catch(SQLException exc) {
+						new AlertDialog.Builder(this).
+								setTitle("Ошибка сохранения").
+								setMessage("Не удалось сохранить палитру.").
+								create().show();
+					}
 					store.close();
 					break;
 				case REQUEST_CODE_LOAD : 

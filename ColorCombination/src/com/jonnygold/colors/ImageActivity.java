@@ -1,6 +1,7 @@
 package com.jonnygold.colors;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
@@ -11,9 +12,13 @@ import com.jonnygold.quantizer.Quantizer;
 import com.jonnygold.quantizer.RGBColor;
 import com.jonnygold.quantizer.IsHistogram.IsBar;
 
+import de.devmil.common.ui.color.ColorSelectorDialog;
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.Intent;
 import android.database.Cursor;
+import android.database.SQLException;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -23,6 +28,7 @@ import android.os.Bundle;
 import android.provider.MediaStore.MediaColumns;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -31,51 +37,29 @@ public class ImageActivity extends Activity {
 
 	private static final double DEFAULT_HISTOGRAM_BOUND = 0.0005;
 	private static final int DEFAULT_QUANTIZATION_LEVEL = 5;
-	private static final int DEFAULT_PALETE_BOUND = 6;
+	private static final int DEFAULT_PALETE_BOUND = 5;
+	
+	private PaletteView paletteView;
+	
+	private ImageView imageView;
+	
+	private SaveStore store;
 	
 	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image);
         
+        paletteView = (PaletteView)findViewById(R.id.view_palette);
+        imageView = (ImageView)findViewById(R.id.view_image);
         
-//		// BEGIN_INCLUDE (inflate_set_custom_view)
-//		// Inflate a "Done/Cancel" custom action bar view.
-//		final LayoutInflater inflater = (LayoutInflater) getActionBar()
-//				.getThemedContext().getSystemService(LAYOUT_INFLATER_SERVICE);
-//		final View customActionBarView = inflater.inflate(
-//				R.layout.actionbar_custom_view_done_cancel, null);
-//		customActionBarView.findViewById(R.id.actionbar_done)
-//				.setOnClickListener(new View.OnClickListener() {
-//					@Override
-//					public void onClick(View v) {
-//						// "Done"
-//						finish();
-//					}
-//				});
-//		customActionBarView.findViewById(R.id.actionbar_cancel)
-//				.setOnClickListener(new View.OnClickListener() {
-//					@Override
-//					public void onClick(View v) {
-//						// "Cancel"
-//						finish();
-//					}
-//				});
-//		// Show the custom action bar view and hide the normal Home icon and
-//		// title.
-//		final ActionBar actionBar = getActionBar();
-//		actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM,
-//				ActionBar.DISPLAY_SHOW_CUSTOM | ActionBar.DISPLAY_SHOW_HOME
-//						| ActionBar.DISPLAY_SHOW_TITLE);
-//		actionBar.setCustomView(customActionBarView,
-//				new ActionBar.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-//						ViewGroup.LayoutParams.MATCH_PARENT));
-//		// END_INCLUDE (inflate_set_custom_view)
+        store = new SaveStore(this);
         
-        
-        
-        PaletteView paletteView = (PaletteView)findViewById(R.id.view_palette);
-        ImageView imageView = (ImageView)findViewById(R.id.view_image);
+        // получаем URI выбранной картинки
+//        Uri imageUri = getIntent().getParcelableExtra("uri");
+//        if(imageUri == null){
+//        	return;
+//        }
         
         Bitmap image;
         
@@ -92,7 +76,7 @@ public class ImageActivity extends Activity {
 		image = BitmapFactory.decodeResource(this.getResources(),
                 R.drawable.himia);
 		
-		image = Bitmap.createScaledBitmap(image, image.getWidth()/10, image.getHeight()/10, true);
+		image = Bitmap.createScaledBitmap(image, image.getWidth()/14, image.getHeight()/14, true);
 		
 		imageView.setImageBitmap(image);
         
@@ -171,6 +155,60 @@ public class ImageActivity extends Activity {
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.activity_image, menu);
 		return super.onCreateOptionsMenu(menu);
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case R.id.save_palete:
+			savePalette();
+			return true;
+		case R.id.edit_palete:
+			editPalette();
+			return true;
+		case R.id.share_palete:
+			
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
+	}
+	
+	private void savePalette() {
+		Intent intent = new Intent(this, SaveActivity.class);
+		startActivityForResult(intent, SaveActivity.REQUEST_CODE_SAVE);
+	}
+	
+	private void editPalette() {
+		Intent intent = new Intent(this, MainActivity.class);
+		intent.putExtra("blocks", paletteView.getPalette());
+		startActivity(intent);
+	}
+	
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+		if(resultCode == RESULT_OK){
+			// id ��������� � ������ ������
+			long id = data.getLongExtra("id", -1);
+			switch(requestCode){
+				case SaveActivity.REQUEST_CODE_SAVE :
+					store.openToWrite();
+					String name = data.getExtras().getString("name");
+					try {
+						store.saveNew(name, paletteView.getPalette());
+					} catch(SQLException exc) {
+						new AlertDialog.Builder(this).
+								setTitle("Ошибка сохранения").
+								setMessage("Не удалось сохранить палитру.").
+								create().show();
+					}						
+					store.close();
+					break;
+				default :
+					break;
+			}
+		}
 	}
 		
 }

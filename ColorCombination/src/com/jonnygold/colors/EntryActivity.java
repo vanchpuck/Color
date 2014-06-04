@@ -52,14 +52,5 @@ public class EntryActivity extends Activity {
 			startActivity(intent);
         }
 	}
-	
-	public String getPath(Uri uri) {
-        String[] projection = { MediaColumns.DATA };
-        Cursor cursor = this
-                .managedQuery(uri, projection, null, null, null);
-        int column_index = cursor.getColumnIndexOrThrow(MediaColumns.DATA);
-        cursor.moveToFirst();
-        return cursor.getString(column_index);
-    }
-		
+			
 }
