@@ -46,22 +46,7 @@ public class LoadActivity extends Activity{
 		saveList.setAdapter(new SavedDataAdapter(this, new ArrayList<SavedData>(data)));
 		
 		registerForContextMenu(saveList);
-		
-//		cursor = store.getSaveList();
-//
-//		startManagingCursor(cursor);
-//
-//		// ��������� ������� �������������
-//		String[] from = new String[] { StoreSQLiteHelper.TabTitle.COL_NAME, StoreSQLiteHelper.TabTitle.COL_CREATE_DATE};
-//		int[] to = new int[] { R.id.item_name, R.id.item_date};
-//
-//		adapter = new SimpleCursorAdapter(this, R.layout.list_item, cursor, from, to);
-//
-//		saveList = (ListView) findViewById(R.id.load_list);
-//		saveList.setAdapter(adapter);
-//
-//		registerForContextMenu(saveList);
-		
+
 		saveList.setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {

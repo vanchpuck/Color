@@ -1,29 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<RelativeLayout
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="match_parent"
 	android:layout_height="wrap_content"
-	android:orientation="vertical">
+	android:paddingLeft="8dp"
+    android:paddingRight="8dp" >
 
     <TextView
 		android:id="@+id/item_date"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:layout_marginLeft="20dp"
-		android:layout_marginTop="3dp"
-		android:textSize="14sp" />
+		android:layout_marginTop="10dp"
+		android:layout_marginRight="10dp"
+		android:textSize="14sp"
+		android:layout_alignEnd="@+id/item_date"
+		android:layout_alignParentRight="true"
+		android:layout_toStartOf="@+id/view_palette" />
     
 	<TextView
 		android:id="@+id/item_name"
-		android:layout_width="wrap_content"
+		android:layout_width="0dp"
 		android:layout_height="wrap_content"
 		android:layout_marginLeft="10dp"
-		android:textSize="26sp" />
+		android:textSize="26sp"
+		android:layout_alignParentLeft="true"
+		android:layout_toLeftOf="@+id/item_date" />
 	
 	<com.jonnygold.colors.PaletteView
 	    android:id="@+id/view_palette"
 	    android:layout_width="match_parent"
-		android:layout_height="50dp" >
+		android:layout_height="50dp"
+		android:layout_below="@id/item_name"
+		android:background="@drawable/shadow" >
 	</com.jonnygold.colors.PaletteView>
 
-</LinearLayout>
+</RelativeLayout>
