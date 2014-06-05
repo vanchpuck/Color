@@ -1,6 +1,10 @@
 package com.jonnygold.colors;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
 import com.jonnygold.colors.R;
+import com.jonnygold.colors.SaveStore.SavedData;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -36,20 +40,27 @@ public class LoadActivity extends Activity{
 		store = new SaveStore(this);
 		store.openToRead();
 
-		cursor = store.getSaveList();
-
-		startManagingCursor(cursor);
-
-		// формируем столбцы сопоставления
-		String[] from = new String[] { StoreSQLiteHelper.TabTitle.COL_NAME, StoreSQLiteHelper.TabTitle.COL_CREATE_DATE};
-		int[] to = new int[] { R.id.item_name, R.id.item_date};
-
-		adapter = new SimpleCursorAdapter(this, R.layout.list_item, cursor, from, to);
-
+		Collection<SavedData> data = store.getSavedData();
+		
 		saveList = (ListView) findViewById(R.id.load_list);
-		saveList.setAdapter(adapter);
-
+		saveList.setAdapter(new SavedDataAdapter(this, new ArrayList<SavedData>(data)));
+		
 		registerForContextMenu(saveList);
+		
+//		cursor = store.getSaveList();
+//
+//		startManagingCursor(cursor);
+//
+//		// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+//		String[] from = new String[] { StoreSQLiteHelper.TabTitle.COL_NAME, StoreSQLiteHelper.TabTitle.COL_CREATE_DATE};
+//		int[] to = new int[] { R.id.item_name, R.id.item_date};
+//
+//		adapter = new SimpleCursorAdapter(this, R.layout.list_item, cursor, from, to);
+//
+//		saveList = (ListView) findViewById(R.id.load_list);
+//		saveList.setAdapter(adapter);
+//
+//		registerForContextMenu(saveList);
 		
 		saveList.setOnItemClickListener(new OnItemClickListener() {
 			@Override
@@ -70,7 +81,6 @@ public class LoadActivity extends Activity{
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		cursor.close();
 		store.close();
 	}
 	
@@ -95,11 +105,11 @@ public class LoadActivity extends Activity{
 	@Override
 	public boolean onContextItemSelected(MenuItem item) {
 		if (item.getItemId() == CM_DELETE_ID) {
-			// получаем из пункта контекстного меню данные по пункту списка 
+			// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ 
 			AdapterContextMenuInfo acmi = (AdapterContextMenuInfo) item.getMenuInfo();
-			// извлекаем id записи и удаляем соответствующую запись в БД
+			// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ id пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅ
 			store.delSave(acmi.id);
-			// обновляем курсор
+			// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
 			cursor.requery();
 			return true;
 		}

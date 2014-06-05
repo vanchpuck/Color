@@ -127,7 +127,7 @@ public class MainActivity extends Activity {
 		switch (item.getItemId()) {
 			case R.id.add_color:
 //				new ColorPicker(MainActivity.this, colors, getResources().getColor(R.color.background)).show();
-				new ColorSelectorDialog(this, colors, getResources().getColor(R.color.background)).show();
+				new ColorSelectorDialog(this, colors, colors.getLastAddedColor()).show();
 				return true;
 			case R.id.clear:
 				colors.removeAllColors();

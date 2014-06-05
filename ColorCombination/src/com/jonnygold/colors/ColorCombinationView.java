@@ -568,6 +568,8 @@ public class ColorCombinationView extends LinearLayout implements ColorSelectorD
 	private ColorsPane colorsPane;
 	private ResizersController resController;
 	private BinPane binPane;
+	
+	private int lastColor = 0xFF000000;
 		
 	public ColorCombinationView(Context context, AttributeSet attrs) {
 		super(context, attrs);
@@ -661,7 +663,12 @@ public class ColorCombinationView extends LinearLayout implements ColorSelectorD
 
 	@Override
 	public void colorChanged(int color) {
+		lastColor = color;
 		this.addColor(color);
+	}
+	
+	public int getLastAddedColor() {
+		return lastColor;
 	}
 	
 

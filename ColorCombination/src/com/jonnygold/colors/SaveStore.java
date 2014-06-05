@@ -1,6 +1,7 @@
 package com.jonnygold.colors;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 
@@ -12,6 +13,38 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 public class SaveStore {
+	
+	public static class SavedData {
+		
+		private final int mId;
+		private final String mName;
+		private final String mDate;
+		private final Collection<BlockBasic> mPalette;
+		
+		public SavedData(int id, String name, String date, Collection<BlockBasic> palette) {
+			mId = id;
+			mName = name;
+			mDate = date;
+			mPalette = palette;
+		}
+		
+		public int getId() {
+			return mId;
+		}
+		
+		public String getName() {
+			return mName;
+		}
+		
+		public String getDate() {
+			return mDate;
+		}
+		
+		public Collection<BlockBasic> getPalette() {
+			return mPalette;
+		}
+		
+	}
 	
 	private SQLiteDatabase db;
 	private StoreSQLiteHelper dbHelper;
@@ -214,6 +247,49 @@ public class SaveStore {
 			null
 		);
 		return cursor;
+	}
+	
+	public Collection<SavedData> getSavedData() {
+		Collection<SavedData> data = new ArrayList<SaveStore.SavedData>();
+		Cursor cursor = db.query(
+			StoreSQLiteHelper.TabTitle.NAME, 
+			new String[]{StoreSQLiteHelper.TabTitle.COL_ID, StoreSQLiteHelper.TabTitle.COL_NAME, StoreSQLiteHelper.TabTitle.COL_CREATE_DATE},
+			null,
+			null,
+			null,
+			null,
+			StoreSQLiteHelper.TabTitle.COL_CREATE_DATE+" DESC",
+			null
+		);
+		while(cursor.moveToNext()) {
+			int id = cursor.getInt(0);
+			String name = cursor.getString(1);
+			String date = cursor.getString(2);
+			data.add(new SavedData(id, name, date, getPalette(id)));
+		}
+		cursor.close();
+		return data;
+	}
+	
+	private Collection<BlockBasic> getPalette(int paletteId) {
+		Collection<BlockBasic> palette = new ArrayList<BlockBasic>();
+		Cursor cursor = db.query(
+			StoreSQLiteHelper.TabContent.NAME, 
+			new String[]{StoreSQLiteHelper.TabContent.COL_COLOR, StoreSQLiteHelper.TabContent.COL_SIZE},
+			StoreSQLiteHelper.TabContent.COL_TITLE_ID +"="+ paletteId,
+			null,
+			null,
+			null,
+			null,
+			null
+		);
+		while(cursor.moveToNext()){
+			int id = cursor.getInt(0);
+			float size = cursor.getFloat(1);
+			palette.add(new BlockBasic(id, size, 0));
+		}
+		cursor.close();
+		return palette;
 	}
 	
 }

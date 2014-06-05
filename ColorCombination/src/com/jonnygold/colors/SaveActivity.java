@@ -14,17 +14,34 @@ import android.os.Bundle;
 //import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
+import android.view.inputmethod.EditorInfo;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.TextView.OnEditorActionListener;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.SimpleCursorAdapter;
+import android.widget.TextView;
 
 public class SaveActivity extends Activity{
+	
+	private class EditorListener implements OnEditorActionListener {
+
+		@Override
+		public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+			if (actionId == EditorInfo.IME_ACTION_DONE) {
+				newSave();
+				return true;
+			}
+			return false;
+		}
+	}
 	
 	public static final int REQUEST_CODE_SAVE = 0;
 	
@@ -60,7 +77,7 @@ public class SaveActivity extends Activity{
 	               })
 	               .setNegativeButton(R.string.resave_cancel, new DialogInterface.OnClickListener() {
 	                   @Override
-					public void onClick(DialogInterface dialog, int id) {
+	                   public void onClick(DialogInterface dialog, int id) {
 	                       // User cancelled the dialog
 	                   }
 	               });
@@ -104,6 +121,7 @@ public class SaveActivity extends Activity{
 		});
 		
 		saveName = (EditText)findViewById(R.id.save_name);
+		saveName.setOnEditorActionListener(new EditorListener());
 	}
 		
 	@Override
