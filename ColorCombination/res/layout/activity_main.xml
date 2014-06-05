@@ -12,15 +12,17 @@
 	    android:orientation="vertical"
 	    android:layout_width="match_parent"
 	    android:layout_height="0dp"
-	    android:layout_weight="0.9"
+	    android:layout_weight="1"
+	    android:gravity="center"
 	    android:background="@color/background">
         
 		<com.jonnygold.colors.ColorCombinationView
 		    android:id="@+id/combination_view"
 		    xmlns:android="http://schemas.android.com/apk/res/android"
 		    android:orientation="vertical"
-		    android:layout_width="match_parent"
-		    android:layout_height="match_parent" > 	    
+		    android:layout_width="300dp"
+		    android:layout_height="360dp"
+		    android:layout_gravity="center" > 	    
 		</com.jonnygold.colors.ColorCombinationView>
 	
 	</LinearLayout>
@@ -29,7 +31,8 @@
 	<com.google.ads.AdView ads:adSize="BANNER"
                            android:layout_width="wrap_content"
                            android:layout_height="50dp"
-                           android:gravity="bottom"
+                           android:gravity="bottom|center_horizontal"
+                           android:layout_gravity="center_horizontal"
                            android:id="@+id/adView"
                            ads:adUnitId="@string/adMob" 
                            ads:loadAdOnCreate="true"/>

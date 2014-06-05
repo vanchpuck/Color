@@ -40,7 +40,7 @@ public class BoundedHistogramConverter implements IsHistogramConverter {
 			if(counter >= bound) {
 				break;
 			}
-			blocks.add(new BlockBasic(bar.getColor().getIntColor(), bar.getCount()/(float)totalCount, 0));
+			blocks.add(new BlockBasic(bar.getColor().getIntColor(), 1f/bound, 0));
 			counter++;
 		}
 		return blocks;

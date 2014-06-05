@@ -16,6 +16,7 @@ import android.view.DragEvent;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
@@ -39,7 +40,7 @@ public class ColorCombinationView extends LinearLayout implements ColorSelectorD
 			
 			rightResizersPane.setOrientation(VERTICAL);
 //			rightResizersPane.setBackgroundColor(Color.BLUE);		
-			rightResizersPane.setLayoutParams(new LinearLayout.LayoutParams(0, android.view.ViewGroup.LayoutParams.FILL_PARENT, 0.14f));
+			rightResizersPane.setLayoutParams(new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT, 0.20f));
 			
 			ResizersPair firstPair = addPair();
 			firstPair.rightResizer.setMargin((Resizer.HEIGHT>>1)*-1);
@@ -164,11 +165,11 @@ public class ColorCombinationView extends LinearLayout implements ColorSelectorD
 //			this.setBackgroundColor(Color.YELLOW);
 //			this.setBackgroundDrawable(getResources().getDrawable(R.drawable.arrow));
 			this.setImageDrawable(getResources().getDrawable(R.drawable.arrow));
-			this.setLayoutParams(new LinearLayout.LayoutParams(android.view.ViewGroup.LayoutParams.FILL_PARENT, HEIGHT));
+			this.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, HEIGHT));
 		}
 		
 		public void setMargin(int margin){
-			LayoutParams lParams = new LinearLayout.LayoutParams(android.view.ViewGroup.LayoutParams.FILL_PARENT, HEIGHT);
+			LayoutParams lParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, HEIGHT);
 			lParams.setMargins(0, margin, 0, 0);
 			
 			this.setLayoutParams(lParams);
@@ -329,7 +330,7 @@ public class ColorCombinationView extends LinearLayout implements ColorSelectorD
 		
 		public BinPane(Context context, AttributeSet attrs) {
 			super(context,attrs);
-			this.setLayoutParams(new LinearLayout.LayoutParams(0, android.view.ViewGroup.LayoutParams.FILL_PARENT, 0.13f));
+			this.setLayoutParams(new LinearLayout.LayoutParams(0, android.view.ViewGroup.LayoutParams.MATCH_PARENT, 0.20f));
 			this.setOrientation(HORIZONTAL);
 			this.setGravity(Gravity.CENTER);
 			setAlpha(0f);
@@ -604,7 +605,7 @@ public class ColorCombinationView extends LinearLayout implements ColorSelectorD
 	
 	
 	public void addColor(int color){
-		if(colorsPane.getChildCount() < 5){
+		if(colorsPane.getChildCount() < 6){
 			resController.addPair();
 			colorsPane.addColor(new ColorBlock(getContext(), color));
 		}

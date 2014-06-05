@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+
+    <string name="color_select_color">Выберите цвет</string>
+    <string name="color_old_color">Отмена</string>
+    <string name="color_new_color">Ok</string>
+    <string name="color_hex_invalid">Неверный hex-код!</string>
+
+</resources>

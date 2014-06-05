@@ -83,24 +83,31 @@ public class MainActivity extends Activity {
     public void onWindowFocusChanged(boolean hasFocus) {
     	super.onWindowFocusChanged(hasFocus);
     	
-    	Parcelable[] basics = getIntent().getExtras().getParcelableArray("blocks");
+    	if(hasFocus){
+    		if(getIntent().getExtras() == null){
+    			return;
+    		}
+    		
+    		Parcelable[] basics = getIntent().getExtras().getParcelableArray("blocks");
+    		getIntent().removeExtra("blocks");//getExtras().remove("blocks");
 
-    	if(basics == null) {
-    		return;
+        	if(basics == null) {
+        		return;
+        	}
+        	int h = colors.getHeight();
+    		BlockBasic bBasic = null;
+    		for(int i=0; i<basics.length; i++){
+    			bBasic = (BlockBasic) basics[i];
+    			
+    			colors.addColor(bBasic.getColor());
+    			
+    			
+    			
+//        		colors.getColorBlock(i).setHeight((int) (h * 0.2) );
+    		}
     	}
-    	int h = colors.getHeight();
-		BlockBasic bBasic = null;
-		for(int i=0; i<basics.length; i++){
-			bBasic = (BlockBasic) basics[i];
-			
-			float hm = h * 0.2f;
-			
-			colors.addColor(bBasic.getColor());
-			
-			
-			
-//    		colors.getColorBlock(i).setHeight((int) (h * 0.2) );
-		}
+    	
+    	
     }
     
     @Override

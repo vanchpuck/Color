@@ -37,7 +37,7 @@ public class ImageActivity extends Activity {
 
 	private static final double DEFAULT_HISTOGRAM_BOUND = 0.0005;
 	private static final int DEFAULT_QUANTIZATION_LEVEL = 5;
-	private static final int DEFAULT_PALETE_BOUND = 5;
+	private static final int DEFAULT_PALETE_BOUND = 6;
 	
 	private PaletteView paletteView;
 	
@@ -56,27 +56,27 @@ public class ImageActivity extends Activity {
         store = new SaveStore(this);
         
         // получаем URI выбранной картинки
-//        Uri imageUri = getIntent().getParcelableExtra("uri");
-//        if(imageUri == null){
-//        	return;
-//        }
+        Uri imageUri = getIntent().getParcelableExtra("uri");
+        if(imageUri == null){
+        	return;
+        }
         
         Bitmap image;
         
 //        Uri selectedImageUri = getIntent().getParcelableExtra("uri");
-//		 
-//		String tempPath = getPath(selectedImageUri);
-//		
-//		BitmapFactory.Options btmapOptions = new BitmapFactory.Options();
-//		
-//		image = BitmapFactory.decodeFile(tempPath, btmapOptions);
-//		
-//		image = Bitmap.createScaledBitmap(image, image.getWidth()/4, image.getHeight()/4, true);
+		 
+		String tempPath = getPath(imageUri);
 		
-		image = BitmapFactory.decodeResource(this.getResources(),
-                R.drawable.himia);
+		BitmapFactory.Options btmapOptions = new BitmapFactory.Options();
 		
-		image = Bitmap.createScaledBitmap(image, image.getWidth()/14, image.getHeight()/14, true);
+		image = BitmapFactory.decodeFile(tempPath, btmapOptions);
+		
+		image = Bitmap.createScaledBitmap(image, image.getWidth()/4, image.getHeight()/4, true);
+		
+//		image = BitmapFactory.decodeResource(this.getResources(),
+//                R.drawable.himia);
+		
+//		image = Bitmap.createScaledBitmap(image, image.getWidth()/14, image.getHeight()/14, true);
 		
 		imageView.setImageBitmap(image);
         
@@ -192,21 +192,22 @@ public class ImageActivity extends Activity {
 			// id ��������� � ������ ������
 			long id = data.getLongExtra("id", -1);
 			switch(requestCode){
-				case SaveActivity.REQUEST_CODE_SAVE :
-					store.openToWrite();
-					String name = data.getExtras().getString("name");
-					try {
-						store.saveNew(name, paletteView.getPalette());
-					} catch(SQLException exc) {
-						new AlertDialog.Builder(this).
-								setTitle("Ошибка сохранения").
-								setMessage("Не удалось сохранить палитру.").
-								create().show();
-					}						
-					store.close();
-					break;
-				default :
-					break;
+			case SaveActivity.REQUEST_CODE_SAVE :
+				store.openToWrite();
+				String name = data.getExtras().getString("name");
+				try {
+				if(id == -1)
+					store.saveNew(name, paletteView.getPalette());
+				else
+					store.saveNew(id, name, paletteView.getPalette());
+				} catch(SQLException exc) {
+					new AlertDialog.Builder(this).
+							setTitle("Ошибка сохранения").
+							setMessage("Не удалось сохранить палитру.").
+							create().show();
+				}
+				store.close();
+				break;
 			}
 		}
 	}

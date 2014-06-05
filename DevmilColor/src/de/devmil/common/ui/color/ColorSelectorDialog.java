@@ -94,7 +94,7 @@ public class ColorSelectorDialog extends Dialog {
 		setContentView(mainContent);
 
 		btnOld.setBackgroundColor(initColor);
-		btnOld.setTextColor(~initColor | 0x000000);
+		btnOld.setTextColor(~initColor | 0xFF000000);
 		
 		content.setColor(initColor);
 	}
@@ -102,7 +102,7 @@ public class ColorSelectorDialog extends Dialog {
 	private void colorChangedInternal(int color)
 	{
 		btnNew.setBackgroundColor(color);
-		btnNew.setTextColor(~color | 0x000000); //without alpha
+		btnNew.setTextColor(~color | 0xFF000000); //without alpha
 		this.color = color;
 	}
 	
