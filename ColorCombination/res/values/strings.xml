@@ -4,9 +4,15 @@
     <string name="title_activity_main"></string>
     <string name="title_activity_save">Сохранить</string>
     <string name="title_activity_load">Загрузить</string>
-    <string name="title_activity_review">Загрузить</string>
+    <string name="title_activity_review">Просмотр</string>
+    <string name="title_import_dialog">Просмотр</string>
+    
+    <string name="import_camera">Камера</string>
+    <string name="import_gallery">Галерея</string>
     
     <string name="menu_add_color">Добавить цвет</string>
+    <string name="menu_import">Импорт</string>
+    <string name="menu_help">Помощь</string>
     <string name="menu_expand">Просмотр</string>
     <string name="menu_share">Поделиться</string>
     <string name="menu_save">Сохранить</string>

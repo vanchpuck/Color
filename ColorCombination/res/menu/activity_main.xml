@@ -5,8 +5,8 @@
         android:icon="@drawable/content_new"
         android:showAsAction="ifRoom" />
         
-    <item android:id="@+id/expand"
-        android:title="@string/menu_expand"
+    <item android:id="@+id/import_palette"
+        android:title="@string/menu_import"
         android:icon="@drawable/av_full_screen"
         android:showAsAction="ifRoom" />
     
@@ -24,4 +24,20 @@
         android:title="@string/menu_clear"
         android:icon="@drawable/content_remove"
         android:showAsAction="ifRoom" />
+    
+    <item android:id="@+id/expand"
+        android:title="@string/menu_expand"
+        android:icon="@drawable/av_full_screen"
+        android:showAsAction="ifRoom" />
+    
+    <item android:id="@+id/share"
+        android:title="@string/menu_share"
+        android:icon="@drawable/av_full_screen"
+        android:showAsAction="ifRoom" />
+    
+    <item android:id="@+id/help"
+        android:title="@string/menu_help"
+        android:icon="@drawable/av_full_screen"
+        android:showAsAction="ifRoom" />
+    
 </menu>

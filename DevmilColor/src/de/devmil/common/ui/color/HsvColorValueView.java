@@ -41,12 +41,12 @@ public class HsvColorValueView extends FrameLayout {
 	private Bitmap drawCache = null;
 	private Drawable colorSelector;
 	private ImageView selectorView;
-	
+
 	private int lastMeasuredSize = -1;
-	
+
 	private float saturation = 0;
 	private float value = 1;
-	
+
 	private OnSaturationOrValueChanged listener;
 
 	public HsvColorValueView(Context context) {
@@ -69,7 +69,9 @@ public class HsvColorValueView extends FrameLayout {
 				R.drawable.color_selector);
 		selectorView = new ImageView(getContext());
 		selectorView.setImageDrawable(colorSelector);
-		addView(selectorView, new LayoutParams(colorSelector.getIntrinsicWidth(), colorSelector.getIntrinsicHeight()));
+		addView(selectorView,
+				new LayoutParams(colorSelector.getIntrinsicWidth(),
+						colorSelector.getIntrinsicHeight()));
 		setWillNotDraw(false);
 	}
 
@@ -79,8 +81,7 @@ public class HsvColorValueView extends FrameLayout {
 		lastMeasuredSize = Math.min(getMeasuredHeight(), getMeasuredWidth());
 		setMeasuredDimension(lastMeasuredSize, lastMeasuredSize);
 		if (drawCache != null
-				&& drawCache.getHeight() != getBackgroundSize(lastMeasuredSize))
-		{
+				&& drawCache.getHeight() != getBackgroundSize(lastMeasuredSize)) {
 			drawCache.recycle();
 			drawCache = null;
 		}
@@ -95,22 +96,20 @@ public class HsvColorValueView extends FrameLayout {
 		int offset = getBackgroundOffset();
 		return availableSize - 2 * offset;
 	}
-	
-	public int getBackgroundSize()
-	{
+
+	public int getBackgroundSize() {
 		ensureCache();
 		return drawCache.getHeight();
 	}
-	
-	private void ensureCache()
-	{
+
+	private void ensureCache() {
 		if (paint == null) {
 			paint = new Paint();
 		}
 		int baseSize = getHeight();
-		if(baseSize <= 0)
+		if (baseSize <= 0)
 			baseSize = getMeasuredHeight();
-		if(baseSize <= 0)
+		if (baseSize <= 0)
 			baseSize = lastMeasuredSize;
 		int backgroundSize = getBackgroundSize(baseSize);
 		if (drawCache == null && backgroundSize > 0) {
@@ -136,77 +135,76 @@ public class HsvColorValueView extends FrameLayout {
 					paint);
 		}
 	}
-	
+
 	@Override
 	protected void onDraw(Canvas canvas) {
 		super.onDraw(canvas);
 		ensureCache();
-		canvas.drawBitmap(drawCache, getBackgroundOffset(), getBackgroundOffset(), paint);
+		canvas.drawBitmap(drawCache, getBackgroundOffset(),
+				getBackgroundOffset(), paint);
 	}
 
 	private boolean down = false;
-	
+
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
-		if(event.getAction() == MotionEvent.ACTION_DOWN)
-		{
+		if (event.getAction() == MotionEvent.ACTION_DOWN) {
 			down = true;
 			return true;
 		}
-		if(event.getAction() == MotionEvent.ACTION_UP)
-		{
+		if (event.getAction() == MotionEvent.ACTION_UP) {
 			down = false;
-			setSelectorPosition((int)event.getX() - getBackgroundOffset(), (int)event.getY() - getBackgroundOffset(), true);
+			setSelectorPosition((int) event.getX() - getBackgroundOffset(),
+					(int) event.getY() - getBackgroundOffset(), true);
 			return true;
 		}
-		if(event.getAction() == MotionEvent.ACTION_MOVE && down)
-		{
-			setSelectorPosition((int)event.getX() - getBackgroundOffset(), (int)event.getY() - getBackgroundOffset(), false);
+		if (event.getAction() == MotionEvent.ACTION_MOVE && down) {
+			setSelectorPosition((int) event.getX() - getBackgroundOffset(),
+					(int) event.getY() - getBackgroundOffset(), true);
 			return true;
 		}
 		return super.onTouchEvent(event);
 	}
-	
-	private void setSatAndValueFromPos(int x, int y, boolean up)
-	{
+
+	private void setSatAndValueFromPos(int x, int y, boolean up) {
 		int offset = getBackgroundOffset();
 
-		saturation = ((x - offset) / (float)getBackgroundSize());
-		value = 1.f - ((y - offset) / (float)getBackgroundSize());
-		
+		saturation = ((x - offset) / (float) getBackgroundSize());
+		value = 1.f - ((y - offset) / (float) getBackgroundSize());
+
 		onSaturationOrValueChanged(up);
 	}
-	
-	private void setSelectorPosition(int x, int y, boolean up)
-	{
+
+	private void setSelectorPosition(int x, int y, boolean up) {
 		setSatAndValueFromPos(x, y, up);
 		placeSelector();
 	}
-	
-	private void placeSelector()
-	{
+
+	private void placeSelector() {
 		int offset = getBackgroundOffset();
-		int halfSize = (int)Math.ceil(selectorView.getHeight() / 2.f);
+		int halfSize = (int) Math.ceil(selectorView.getHeight() / 2.f);
 
-		int x = (int)(getBackgroundSize() * saturation);
-		int y = (int)(getBackgroundSize() * (1.f - value));
+		int x = (int) (getBackgroundSize() * saturation);
+		int y = (int) (getBackgroundSize() * (1.f - value));
 
-		int left = Math.max(0, Math.min(getBackgroundSize(), x)) + offset - halfSize;
-		int top = Math.max(0, Math.min(getBackgroundSize(), y)) + offset - halfSize;
+		int left = Math.max(0, Math.min(getBackgroundSize(), x)) + offset
+				- halfSize;
+		int top = Math.max(0, Math.min(getBackgroundSize(), y)) + offset
+				- halfSize;
 
-		selectorView.layout(left, top, left + selectorView.getWidth(), top + selectorView.getHeight());
+		selectorView.layout(left, top, left + selectorView.getWidth(), top
+				+ selectorView.getHeight());
 	}
-	
+
 	@Override
 	protected void onLayout(boolean changed, int left, int top, int right,
 			int bottom) {
 		super.onLayout(changed, left, top, right, bottom);
 		placeSelector();
 	}
-	
-	private void setPosFromSatAndValue()
-	{
-		if(drawCache != null)
+
+	private void setPosFromSatAndValue() {
+		if (drawCache != null)
 			placeSelector();
 	}
 
@@ -215,42 +213,37 @@ public class HsvColorValueView extends FrameLayout {
 		drawCache = null;
 		invalidate();
 	}
-	
-	public void setSaturation(float sat)
-	{
+
+	public void setSaturation(float sat) {
 		saturation = sat;
 		setPosFromSatAndValue();
 	}
-	
-	public float getSaturation()
-	{
+
+	public float getSaturation() {
 		return saturation;
 	}
-	
-	public void setValue(float value)
-	{
+
+	public void setValue(float value) {
 		this.value = value;
 		setPosFromSatAndValue();
 	}
-	
-	public float getValue()
-	{
+
+	public float getValue() {
 		return value;
 	}
-	
-	public void setOnSaturationOrValueChanged(OnSaturationOrValueChanged listener)
-	{
+
+	public void setOnSaturationOrValueChanged(
+			OnSaturationOrValueChanged listener) {
 		this.listener = listener;
 	}
-	
-	private void onSaturationOrValueChanged(boolean up)
-	{
-		if(listener != null)
+
+	private void onSaturationOrValueChanged(boolean up) {
+		if (listener != null)
 			listener.saturationOrValueChanged(this, saturation, value, up);
 	}
-	
-	public interface OnSaturationOrValueChanged
-	{
-		public void saturationOrValueChanged(HsvColorValueView sender, float saturation, float value, boolean up);
+
+	public interface OnSaturationOrValueChanged {
+		public void saturationOrValueChanged(HsvColorValueView sender,
+				float saturation, float value, boolean up);
 	}
 }

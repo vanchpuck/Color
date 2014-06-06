@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.SQLException;
 //import android.util.Log;
@@ -142,12 +143,29 @@ public class MainActivity extends Activity {
 				loadColors();
 //				store.openToRead();
 //				store.load(2, colors);
+			case R.id.import_palette:
+				showImportDialog();
+//				store.openToRead();
+//				store.load(2, colors);
 				return true;
 			default:
 				return super.onOptionsItemSelected(item);
 		}
     }
 
+	private void showImportDialog() {
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setTitle(R.string.title_import_dialog)
+				.setItems(R.array.import_source,
+						new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog, int which) {
+								// The 'which' argument contains the index
+								// position
+								// of the selected item
+							}
+						}).create().show();
+	}
+    
     protected void review(){
     	Intent intent = new Intent(this, ReviewActivity.class);
     	intent.putExtra(getPackageName()+".basics", colors.getBlockBasics());

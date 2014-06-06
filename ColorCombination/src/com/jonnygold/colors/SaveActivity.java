@@ -1,6 +1,10 @@
 package com.jonnygold.colors;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
 import com.jonnygold.colors.R;
+import com.jonnygold.colors.SaveStore.SavedData;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -25,7 +29,6 @@ import android.widget.TextView.OnEditorActionListener;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 
@@ -97,18 +100,10 @@ public class SaveActivity extends Activity{
 		store = new SaveStore(this);
 		store.openToWrite();
 		
-		cursor = store.getSaveList();
-		
-		startManagingCursor(cursor);
-		
-		// ��������� ������� �������������
-		String[] from = new String[] { StoreSQLiteHelper.TabTitle.COL_NAME, StoreSQLiteHelper.TabTitle.COL_CREATE_DATE};
-		int[] to = new int[] { R.id.item_name, R.id.item_date};
-		
-		adapter = new SimpleCursorAdapter(this, R.layout.list_item, cursor, from, to);
+		Collection<SavedData> data = store.getSavedData();
 		
 		saveList = (ListView) findViewById(R.id.save_list);
-		saveList.setAdapter(adapter);
+		saveList.setAdapter(new SavedDataAdapter(this, new ArrayList<SavedData>(data)));
 		
 		registerForContextMenu(saveList);
 		
